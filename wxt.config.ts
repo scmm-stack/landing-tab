@@ -18,6 +18,8 @@ export const CONTENT_SECURITY_POLICY = [
   "form-action 'none'",
 ].join('; ');
 
+const MINIMUM_CHROMIUM = '121';
+
 export default defineConfig({
   srcDir: 'src',
   modules: ['@wxt-dev/module-react'],
@@ -50,6 +52,7 @@ export default defineConfig({
             },
           },
         }
-      : {}),
+      : // Promises on every extension API, which this code relies on, arrived in Chromium 121.
+        { minimum_chrome_version: MINIMUM_CHROMIUM }),
   }),
 });

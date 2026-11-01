@@ -1,7 +1,7 @@
 import { type CSSProperties, type DragEvent, type MouseEvent, useState } from 'react';
 import * as dash from '../lib/dashboard';
 import { t } from '../lib/i18n';
-import type { Group, OpenTarget, Settings, Shortcut } from '../lib/model';
+import { type Group, type OpenTarget, type Settings, type Shortcut, lettersFor } from '../lib/model';
 import { openUrl } from '../lib/open';
 import { update, useAppState } from '../lib/store';
 import { rem } from '../lib/units';
@@ -155,7 +155,7 @@ export function Grid({ group, selecting, selected, onToggleSelected, onAdd, onSh
                 onShortcutMenu(e, shortcut);
               }}
             >
-              <TileFace tile={shortcut.tile} color={shortcut.color} />
+              <TileFace tile={shortcut.tile} color={shortcut.color} fallbackLetters={lettersFor(shortcut.title)} />
               {label(shortcut.title, shortcut.note)}
             </a>
           </li>

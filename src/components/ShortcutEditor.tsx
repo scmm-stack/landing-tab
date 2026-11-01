@@ -216,7 +216,7 @@ export function ShortcutForm({ shortcut, groupId, showGroupPicker, popup = false
     <form className="form" onSubmit={(e) => void submit(e)}>
       <div className="form-top">
         <div className="tile-preview">
-          <TileFace tile={previewTile} color={shownColor} previewUrl={showingImage ? previewUrl : null} />
+          <TileFace tile={previewTile} color={shownColor} previewUrl={showingImage ? previewUrl : null} fallbackLetters={lettersFor(title)} />
         </div>
         <div className="form-top-fields">
           <Field label={t('fieldUrl')}>

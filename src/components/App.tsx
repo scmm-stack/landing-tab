@@ -67,7 +67,10 @@ function useAccentColor(): void {
     if (wallpaper.source === 'color') set(wallpaper.color);
     else if (wallpaper.source === 'scene') set(SCENE_ACCENTS[wallpaper.scene]);
     else if (wallpaper.activeImageId) {
-      void loadImage(wallpaper.activeImageId).then((blob) => (blob ? averageColor(blob) : null)).then(set);
+      void loadImage(wallpaper.activeImageId)
+        .then((blob) => (blob ? averageColor(blob) : null))
+        .catch(() => null)
+        .then(set);
     }
     return () => {
       live = false;

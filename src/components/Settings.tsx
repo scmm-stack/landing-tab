@@ -370,8 +370,9 @@ function WallpaperSection({ s }: { s: SettingsData }) {
 
   const download = async () => {
     if (!w.activeImageId) return;
-    const blob = await loadImage(w.activeImageId);
+    const blob = await loadImage(w.activeImageId).catch(() => undefined);
     if (blob) downloadBlob(blob, `wallpaper.${blob.type.split('/')[1]?.split('+')[0] ?? 'png'}`);
+    else toast(t('imageSaveFailed'));
   };
 
   return (
@@ -489,8 +490,9 @@ function DataTab({ onImportBookmarks }: { onImportBookmarks: (folders: BookmarkF
       await storingImages(async () => {
         for (const image of images) await saveImage(image.id, image.blob);
         const kept = new Set(images.map((image) => image.id));
-        await replaceState(state);
+        // Read first, so a window without image storage fails before anything changes.
         const stale = (await listImageIds()).filter((id) => !kept.has(id));
+        await replaceState(state);
         await Promise.all(stale.map(removeImage));
       });
       reloadAfterRestore();

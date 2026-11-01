@@ -6,8 +6,9 @@
 export default {
   branches: ['main'],
   plugins: [
-    '@semantic-release/commit-analyzer',
-    '@semantic-release/release-notes-generator',
+    // Stays below 1.0: a breaking change is a minor version until this rule is removed.
+    ['@semantic-release/commit-analyzer', { preset: 'conventionalcommits', releaseRules: [{ breaking: true, release: 'minor' }] }],
+    ['@semantic-release/release-notes-generator', { preset: 'conventionalcommits' }],
     ['@semantic-release/npm', { npmPublish: false }],
     ['@semantic-release/exec', { prepareCmd: 'npm run zip' }],
     [

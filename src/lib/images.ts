@@ -49,11 +49,20 @@ export function isAllowedImage(blob: Blob): boolean {
 
 const urlCache = new Map<string, Promise<string | null>>();
 
-/** Object URL for a stored image, cached for the lifetime of the page. */
+/**
+ * Object URL for a stored image, cached for the lifetime of the page. Null means
+ * it can't be shown: it's gone, or image storage can't be reached, which is always
+ * the case in a Firefox private window. That failure isn't cached.
+ */
 export function imageUrl(id: string): Promise<string | null> {
   let cached = urlCache.get(id);
   if (!cached) {
-    cached = loadImage(id).then((blob) => (blob ? URL.createObjectURL(blob) : null));
+    cached = loadImage(id)
+      .then((blob) => (blob ? URL.createObjectURL(blob) : null))
+      .catch(() => {
+        urlCache.delete(id);
+        return null;
+      });
     urlCache.set(id, cached);
   }
   return cached;

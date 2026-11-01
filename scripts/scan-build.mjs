@@ -80,6 +80,7 @@ function checkManifest(target, dir) {
     if (manifest[key]) fail(target, `manifest must not contain ${key}`);
   }
   if (manifest.chrome_url_overrides?.newtab !== 'newtab.html') fail(target, 'new tab override missing');
+  if (!target.startsWith('firefox') && manifest.minimum_chrome_version !== '121') fail(target, `minimum Chromium version changed: ${manifest.minimum_chrome_version}`);
   if (target.startsWith('firefox')) {
     const required = manifest.browser_specific_settings?.gecko?.data_collection_permissions?.required;
     if (!sameSet(required, ['none'])) fail(target, 'Firefox data collection declaration must be "none"');

@@ -19,12 +19,15 @@ export function storingImages<T>(work: () => Promise<T>): Promise<T> {
   });
 }
 
-/** Deletes stored images nothing refers to any more, such as a replaced tile icon. */
+/**
+ * Deletes stored images nothing refers to any more, such as a replaced tile icon.
+ * Does nothing where image storage can't be reached, as in a Firefox private window.
+ */
 export function collectUnusedImages(): Promise<void> {
   return navigator.locks.request(IMAGE_LOCK, async () => {
     await flush();
     const used = dash.referencedImageIds(await readSavedState());
-    const stored = await listImageIds();
+    const stored = await listImageIds().catch(() => []);
     await Promise.all(stored.filter((id) => !used.has(id)).map(removeImage));
   });
 }

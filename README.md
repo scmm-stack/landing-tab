@@ -7,13 +7,14 @@ A new tab dashboard for Firefox, Edge and Chrome that keeps everything on your d
 - Shortcut groups with a sidebar, wheel scrolling that loops through them, drag to reorder, and multi-select delete
 - Cards with an image, name and description, or plain icons
 - Image or letter tiles, with layouts, sizes, colors and open-in options
-- Search box with built-in and custom engines, plus optional local history. Results can open in a private window. With **Browser default** as the engine, that needs this extension allowed in private windows, on the browser's extensions page
+- Search box with built-in and custom engines, plus optional local history. Results can open in a private window. In Firefox that always needs this extension allowed in private windows, on the browser's extensions page. In Edge and Chrome it's needed only with **Browser default** as the engine
 - Smooth opening animation, shortcuts that fade in together at an adjustable speed, and an optional shine on hover. All motion stops if your system asks for reduced motion
 - Clock and full-screen standby page
 - Wallpapers: your own images with timed rotation, solid colors and animated scenes
 - Toolbar button to add the current page. A file dialog would close the panel in Firefox, so **Choose a file** moves the form to a small window there
 - Bookmark import and export
 - Backup and restore through a JSON file you keep
+- Firefox private windows work, but extensions can't reach image storage there, so tiles show letters and wallpapers don't appear
 - English and Polish
 
 ## What leaves your device
@@ -73,7 +74,7 @@ The browser test uses your installed browsers in throwaway profiles and never to
 
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org). A hook checks them locally, and CI checks pull requests.
 
-Every push to `main` runs `npm run verify`, then semantic-release picks the next version from the commits: `fix:` is a patch, `feat:` is a minor version, and `feat!:` or a `BREAKING CHANGE:` footer is a major version. Other types make no release. A release creates the tag and a GitHub Release with the packages attached. The version lives in the tag, so `version` in `package.json` isn't updated in the repo.
+Every push to `main` runs `npm run verify`, then semantic-release picks the next version from the commits: `fix:` is a patch, and `feat:` is a minor version. Until 1.0, `feat!:` or a `BREAKING CHANGE:` footer is a minor version too, set by a rule in `release.config.mjs`. Other types make no release. A release creates the tag and a GitHub Release with the packages attached. The version lives in the tag, so `version` in `package.json` isn't updated in the repo.
 
 Publishing to a store is a separate step. To send a release to Edge, run **Actions > Publish to Edge** with its tag. Tick **dry run** to check the credentials only. It needs these secrets in a GitHub environment named `edge-store`:
 
