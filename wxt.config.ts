@@ -24,8 +24,9 @@ export default defineConfig({
   srcDir: 'src',
   modules: ['@wxt-dev/module-react'],
   manifestVersion: 3,
-  // Mozilla's reviewers rebuild from the source archive, and need .npmrc to do it the same way.
-  zip: { includeSources: ['.npmrc'] },
+  // This list replaces the default of everything. Mozilla's reviewers rebuild from the
+  // source archive, and need .npmrc to do it the same way.
+  zip: { includeSources: ['**/*', '.npmrc'] },
   // The default preload polyfill contains a fetch call, which nothing here needs.
   vite: () => ({ build: { modulePreload: { polyfill: false } } }),
   manifest: ({ browser }) => ({
