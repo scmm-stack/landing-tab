@@ -1,0 +1,50 @@
+name: Publish to Edge
+
+# Started by hand. Certification can take days, and a release made with the
+# default GitHub token can't start another workflow anyway. It uploads the exact
+# package attached to the GitHub Release, so what ships is what was verified.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag, such as v1.2.0
+        required: true
+        type: string
+      dry_run:
+        description: Only check the credentials
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: edge-store
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.tag }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Download the released package
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: gh release download "$TAG" --pattern '*-edge.zip' --dir release
+      - name: Submit to Microsoft Edge Add-ons
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+          EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
+          EDGE_CLIENT_ID: ${{ secrets.EDGE_CLIENT_ID }}
+          EDGE_API_KEY: ${{ secrets.EDGE_API_KEY }}
+        run: |
+          args=(--edge-zip release/*-edge.zip)
+          if [ "$DRY_RUN" = "true" ]; then args+=(--dry-run); fi
+          npx wxt submit "${args[@]}"

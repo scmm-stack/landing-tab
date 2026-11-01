@@ -1,0 +1,8 @@
+node_modules/
+.output/
+.wxt/
+*.log
+.DS_Store
+web-ext-artifacts/
+test-results/
+.forbidden-terms

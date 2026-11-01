@@ -1,0 +1,542 @@
+{
+  "extName": {
+    "message": "Landing Tab"
+  },
+  "extDescription": {
+    "message": "A new tab dashboard that keeps everything on your device. No account, no tracking."
+  },
+  "close": {
+    "message": "Close"
+  },
+  "confirmTitle": {
+    "message": "Are you sure?"
+  },
+  "cancel": {
+    "message": "Cancel"
+  },
+  "delete": {
+    "message": "Delete"
+  },
+  "save": {
+    "message": "Save"
+  },
+  "add": {
+    "message": "Add"
+  },
+  "edit": {
+    "message": "Edit"
+  },
+  "saving": {
+    "message": "Saving…"
+  },
+  "addShortcut": {
+    "message": "Add shortcut"
+  },
+  "editShortcut": {
+    "message": "Edit shortcut"
+  },
+  "addGroup": {
+    "message": "Add group"
+  },
+  "editGroup": {
+    "message": "Edit group"
+  },
+  "groups": {
+    "message": "Groups"
+  },
+  "settings": {
+    "message": "Settings"
+  },
+  "openAll": {
+    "message": "Open all"
+  },
+  "selectMultiple": {
+    "message": "Select multiple"
+  },
+  "selectedCount": {
+    "message": "$1 selected"
+  },
+  "deleteSelectedConfirm": {
+    "message": "Delete $1 selected shortcuts?"
+  },
+  "deleteShortcutConfirm": {
+    "message": "Delete the shortcut \"$1\"?"
+  },
+  "deleteGroupConfirm": {
+    "message": "Delete the group \"$1\" and its $2 shortcuts?"
+  },
+  "fieldUrl": {
+    "message": "Website address"
+  },
+  "fieldName": {
+    "message": "Name"
+  },
+  "fieldNote": {
+    "message": "Description (optional)"
+  },
+  "fieldGroup": {
+    "message": "Group"
+  },
+  "fieldIcon": {
+    "message": "Icon"
+  },
+  "fieldIconText": {
+    "message": "Icon text"
+  },
+  "fieldColor": {
+    "message": "Background color"
+  },
+  "fieldSymbol": {
+    "message": "Symbol"
+  },
+  "fieldSymbolHint": {
+    "message": "An emoji or a few letters."
+  },
+  "useLetters": {
+    "message": "Use letters"
+  },
+  "useImage": {
+    "message": "Use image"
+  },
+  "iconScale": {
+    "message": "Image size"
+  },
+  "websiteImages": {
+    "message": "Fetch website images automatically"
+  },
+  "websiteImagesHint": {
+    "message": "When you add a shortcut, its image is fetched from that website's home page, without cookies, and kept on your device."
+  },
+  "websiteImagesAllow": {
+    "message": "To fetch website images automatically, your browser needs your permission once."
+  },
+  "websiteImagesInSettings": {
+    "message": "To fetch website images, allow them under Settings > Shortcuts on a new tab."
+  },
+  "allow": {
+    "message": "Allow"
+  },
+  "finding": {
+    "message": "Looking for the website image…"
+  },
+  "chooseFile": {
+    "message": "Choose a file"
+  },
+  "urlInvalid": {
+    "message": "Enter a valid web address."
+  },
+  "imageTypeUnsupported": {
+    "message": "This image type is not supported."
+  },
+  "imageTooLarge": {
+    "message": "The image must be smaller than $1."
+  },
+  "imageSaveFailed": {
+    "message": "The image could not be saved."
+  },
+  "websiteImageNotFound": {
+    "message": "No image was found for this website."
+  },
+  "privateNotAllowed": {
+    "message": "Allow this extension in private windows first, on the browser's extensions page."
+  },
+  "openFailed": {
+    "message": "This address could not be opened."
+  },
+  "popupCantAdd": {
+    "message": "This page can't be added. Only web pages can be saved as shortcuts."
+  },
+  "openCurrent": {
+    "message": "Current tab"
+  },
+  "openNew": {
+    "message": "New tab"
+  },
+  "openBackground": {
+    "message": "Background tab"
+  },
+  "openPrivate": {
+    "message": "Private window"
+  },
+  "searchPlaceholder": {
+    "message": "Search"
+  },
+  "searchEngines": {
+    "message": "Search engines"
+  },
+  "searchBoxSection": {
+    "message": "Search box"
+  },
+  "searchResultsSection": {
+    "message": "Results and history"
+  },
+  "searchEnginesHint": {
+    "message": "Choose which one to use from the search box on the page."
+  },
+  "searchHistory": {
+    "message": "Search history"
+  },
+  "engineBrowserDefault": {
+    "message": "Browser default"
+  },
+  "showSearchBox": {
+    "message": "Show search box"
+  },
+  "searchWidth": {
+    "message": "Search box width"
+  },
+  "searchHeight": {
+    "message": "Search box height"
+  },
+  "searchRoundness": {
+    "message": "Corner roundness"
+  },
+  "openResultsIn": {
+    "message": "Open results in"
+  },
+  "searchHistorySetting": {
+    "message": "Remember my searches"
+  },
+  "searchHistoryHint": {
+    "message": "Kept only on this device. Turning this off clears the history."
+  },
+  "addSearchEngine": {
+    "message": "Add a search engine"
+  },
+  "fieldEngineUrl": {
+    "message": "Search address"
+  },
+  "engineUrlHint": {
+    "message": "Use %s where the search term goes."
+  },
+  "engineUrlInvalid": {
+    "message": "Enter a web address containing %s."
+  },
+  "engineDeleteConfirm": {
+    "message": "Delete the search engine \"$1\"?"
+  },
+  "tabAppearance": {
+    "message": "Appearance"
+  },
+  "tabShortcuts": {
+    "message": "Shortcuts"
+  },
+  "tabSidebar": {
+    "message": "Groups and sidebar"
+  },
+  "tabSearch": {
+    "message": "Search"
+  },
+  "tabClock": {
+    "message": "Clock and standby"
+  },
+  "tabData": {
+    "message": "Data and privacy"
+  },
+  "theme": {
+    "message": "Color theme"
+  },
+  "themeSystem": {
+    "message": "Match system"
+  },
+  "themeLight": {
+    "message": "Light"
+  },
+  "themeDark": {
+    "message": "Dark"
+  },
+  "colorsSection": {
+    "message": "Colors"
+  },
+  "wallpaperSection": {
+    "message": "Wallpaper"
+  },
+  "sidebar": {
+    "message": "Sidebar"
+  },
+  "sidebarSide": {
+    "message": "Sidebar position"
+  },
+  "sideLeft": {
+    "message": "Left"
+  },
+  "sideRight": {
+    "message": "Right"
+  },
+  "sidebarAutoHide": {
+    "message": "Hide sidebar until you hover over it"
+  },
+  "sidebarNarrow": {
+    "message": "Show only symbols until you hover over it"
+  },
+  "sidebarWidth": {
+    "message": "Sidebar width"
+  },
+  "scrollToSwitch": {
+    "message": "Switch groups with the mouse wheel"
+  },
+  "scrollToSwitchHint": {
+    "message": "After the last group it loops back to the first."
+  },
+  "rememberLastGroup": {
+    "message": "Reopen the last used group"
+  },
+  "rememberLastGroupHint": {
+    "message": "When this is off, new tabs start on the first group."
+  },
+  "layoutPreset": {
+    "message": "Layout preset"
+  },
+  "presetCompact": {
+    "message": "Compact"
+  },
+  "presetBalanced": {
+    "message": "Balanced"
+  },
+  "presetSpacious": {
+    "message": "Spacious"
+  },
+  "presetWide": {
+    "message": "Wide"
+  },
+  "layout": {
+    "message": "Layout"
+  },
+  "arrangement": {
+    "message": "Number of columns"
+  },
+  "arrangementAuto": {
+    "message": "As many as fit"
+  },
+  "arrangementColumns": {
+    "message": "Fixed number"
+  },
+  "columns": {
+    "message": "Columns"
+  },
+  "maxColumns": {
+    "message": "Maximum columns"
+  },
+  "tileSize": {
+    "message": "Shortcut size"
+  },
+  "rowGap": {
+    "message": "Space between rows"
+  },
+  "columnGap": {
+    "message": "Space between columns"
+  },
+  "displayWidth": {
+    "message": "Width of the shortcut area"
+  },
+  "styleSection": {
+    "message": "Style"
+  },
+  "behaviorSection": {
+    "message": "Behavior"
+  },
+  "shortcutOpacity": {
+    "message": "Shortcut opacity"
+  },
+  "searchOpacity": {
+    "message": "Search box opacity"
+  },
+  "tileStyle": {
+    "message": "Shortcut style"
+  },
+  "tileStyleCard": {
+    "message": "Cards with description"
+  },
+  "tileStyleIcon": {
+    "message": "Icons"
+  },
+  "shadow": {
+    "message": "Shadow under shortcuts"
+  },
+  "shine": {
+    "message": "Shine on hover"
+  },
+  "fadeTime": {
+    "message": "Shortcut fade-in time"
+  },
+  "fadeTimeHint": {
+    "message": "Also sets how fast groups change. 0 turns the fade off."
+  },
+  "showLabels": {
+    "message": "Show names under icons"
+  },
+  "showAddButton": {
+    "message": "Show the \"Add shortcut\" tile"
+  },
+  "openShortcutsIn": {
+    "message": "Open shortcuts in"
+  },
+  "showClock": {
+    "message": "Show clock"
+  },
+  "clockSection": {
+    "message": "Clock"
+  },
+  "hour24": {
+    "message": "Use 24-hour time"
+  },
+  "standby": {
+    "message": "Standby screen"
+  },
+  "standbyEnabled": {
+    "message": "Show standby screen when idle"
+  },
+  "standbyHint": {
+    "message": "A full-screen clock shown after a period of inactivity."
+  },
+  "standbyOnNewTab": {
+    "message": "Also show on every new tab"
+  },
+  "standbyDelay": {
+    "message": "Idle time before it appears"
+  },
+  "standbyBlur": {
+    "message": "Standby background blur"
+  },
+  "standbyClock": {
+    "message": "Show clock on the standby screen"
+  },
+  "standbyDismiss": {
+    "message": "Close standby screen"
+  },
+  "wallpaperSource": {
+    "message": "Wallpaper type"
+  },
+  "wallpaperScene": {
+    "message": "Animated scene"
+  },
+  "wallpaperImage": {
+    "message": "Your images"
+  },
+  "wallpaperColor": {
+    "message": "Solid color"
+  },
+  "wallpaperSceneChoice": {
+    "message": "Scene"
+  },
+  "wallpaperColorChoice": {
+    "message": "Wallpaper color"
+  },
+  "sceneAurora": {
+    "message": "Aurora"
+  },
+  "sceneLanterns": {
+    "message": "Lanterns"
+  },
+  "addImages": {
+    "message": "Add images"
+  },
+  "useWallpaper": {
+    "message": "Use this wallpaper"
+  },
+  "nextWallpaper": {
+    "message": "Next wallpaper"
+  },
+  "downloadWallpaper": {
+    "message": "Download image"
+  },
+  "wallpaperDeleteConfirm": {
+    "message": "Delete this wallpaper?"
+  },
+  "rotateEvery": {
+    "message": "Change image automatically"
+  },
+  "rotateNever": {
+    "message": "Never"
+  },
+  "rotateMinutes": {
+    "message": "Every $1 minutes"
+  },
+  "rotateHours": {
+    "message": "Every $1 hours"
+  },
+  "rotateHour": {
+    "message": "Every hour"
+  },
+  "rotateDaily": {
+    "message": "Every day"
+  },
+  "wallpaperBlur": {
+    "message": "Wallpaper blur"
+  },
+  "accentFromWallpaper": {
+    "message": "Match accent color to wallpaper"
+  },
+  "accentFromWallpaperHint": {
+    "message": "Buttons and highlights take a color from the wallpaper."
+  },
+  "backup": {
+    "message": "Backup"
+  },
+  "backupHint": {
+    "message": "Saves everything, including your images, to a file you keep. Nothing is stored anywhere else, so this is your only copy."
+  },
+  "exportBackup": {
+    "message": "Save backup"
+  },
+  "restoreBackup": {
+    "message": "Restore from backup file"
+  },
+  "restore": {
+    "message": "Restore"
+  },
+  "restoreConfirm": {
+    "message": "Replace everything here with this backup ($1 shortcuts)?"
+  },
+  "restoreDone": {
+    "message": "Backup restored."
+  },
+  "restoreFailed": {
+    "message": "This file is not a valid backup."
+  },
+  "restoreTooNew": {
+    "message": "This backup comes from a newer version."
+  },
+  "backupFailed": {
+    "message": "The backup could not be created."
+  },
+  "bookmarks": {
+    "message": "Bookmarks"
+  },
+  "importBookmarks": {
+    "message": "Import bookmarks as shortcuts"
+  },
+  "exportBookmarks": {
+    "message": "Export shortcuts to bookmarks"
+  },
+  "importCount": {
+    "message": "Import ($1)"
+  },
+  "bookmarkAccessNeeded": {
+    "message": "Allow bookmark access to continue."
+  },
+  "bookmarksEmpty": {
+    "message": "No bookmarks to import."
+  },
+  "bookmarksFailed": {
+    "message": "Bookmarks could not be read or written."
+  },
+  "bookmarksImported": {
+    "message": "$1 shortcuts added."
+  },
+  "bookmarksExported": {
+    "message": "$1 shortcuts copied to the bookmarks toolbar."
+  },
+  "bookmarkLimit": {
+    "message": "Choose up to $1 bookmarks at a time."
+  },
+  "privacy": {
+    "message": "Privacy"
+  },
+  "privacyStatement": {
+    "message": "Your shortcuts, settings and images stay on this device. There is no account, no sync, no analytics and no server."
+  },
+  "privacyFavicon": {
+    "message": "The only network use is fetching a website's image when you add a shortcut, which you can turn off under Shortcuts > Behavior. Websites and search engines you open see your visit as usual."
+  }
+}

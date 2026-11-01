@@ -1,0 +1,50 @@
+{
+  "name": "landing-tab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A new tab dashboard that keeps everything on your device.",
+  "scripts": {
+    "setup": "wxt prepare && husky",
+    "build": "npm run build:firefox && npm run build:chrome && npm run build:edge",
+    "build:firefox": "wxt build -b firefox --mv3",
+    "build:chrome": "wxt build -b chrome --mv3",
+    "build:edge": "wxt build -b edge --mv3",
+    "zip": "npm run zip:firefox && npm run zip:chrome && npm run zip:edge",
+    "zip:firefox": "wxt zip -b firefox --mv3",
+    "zip:chrome": "wxt zip -b chrome --mv3",
+    "zip:edge": "wxt zip -b edge --mv3",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:firefox": "npx --yes web-ext@10.8.0 lint --source-dir .output/firefox-mv3 --no-config-discovery",
+    "test": "vitest run",
+    "scan": "node scripts/scan-build.mjs",
+    "verify": "npm run typecheck && npm run lint && npm run test && npm run build && npm run scan && npm run lint:firefox",
+    "test:browsers": "node tests/e2e/run.mjs"
+  },
+  "dependencies": {
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "21.2.4",
+    "@commitlint/config-conventional": "21.2.4",
+    "@semantic-release/exec": "7.1.0",
+    "@types/node": "24.19.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@wxt-dev/module-react": "1.2.2",
+    "eslint": "10.14.0",
+    "fake-indexeddb": "6.2.7",
+    "husky": "9.1.7",
+    "puppeteer-core": "25.16.0",
+    "semantic-release": "25.0.9",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.1",
+    "vitest": "5.0.5",
+    "wxt": "0.21.5"
+  },
+  "overrides": {
+    "minimatch": "11.0.3"
+  }
+}

@@ -1,0 +1,542 @@
+{
+  "extName": {
+    "message": "Landing Tab"
+  },
+  "extDescription": {
+    "message": "Pulpit nowej karty, który trzyma wszystko na Twoim urządzeniu. Bez konta i bez śledzenia."
+  },
+  "close": {
+    "message": "Zamknij"
+  },
+  "confirmTitle": {
+    "message": "Czy na pewno?"
+  },
+  "cancel": {
+    "message": "Anuluj"
+  },
+  "delete": {
+    "message": "Usuń"
+  },
+  "save": {
+    "message": "Zapisz"
+  },
+  "add": {
+    "message": "Dodaj"
+  },
+  "edit": {
+    "message": "Edytuj"
+  },
+  "saving": {
+    "message": "Zapisywanie…"
+  },
+  "addShortcut": {
+    "message": "Dodaj skrót"
+  },
+  "editShortcut": {
+    "message": "Edytuj skrót"
+  },
+  "addGroup": {
+    "message": "Dodaj grupę"
+  },
+  "editGroup": {
+    "message": "Edytuj grupę"
+  },
+  "groups": {
+    "message": "Grupy"
+  },
+  "settings": {
+    "message": "Ustawienia"
+  },
+  "openAll": {
+    "message": "Otwórz wszystkie"
+  },
+  "selectMultiple": {
+    "message": "Zaznacz wiele"
+  },
+  "selectedCount": {
+    "message": "Zaznaczono: $1"
+  },
+  "deleteSelectedConfirm": {
+    "message": "Usunąć zaznaczone skróty ($1)?"
+  },
+  "deleteShortcutConfirm": {
+    "message": "Usunąć skrót „$1”?"
+  },
+  "deleteGroupConfirm": {
+    "message": "Usunąć grupę „$1” i jej skróty ($2)?"
+  },
+  "fieldUrl": {
+    "message": "Adres strony"
+  },
+  "fieldName": {
+    "message": "Nazwa"
+  },
+  "fieldNote": {
+    "message": "Opis (opcjonalnie)"
+  },
+  "fieldGroup": {
+    "message": "Grupa"
+  },
+  "fieldIcon": {
+    "message": "Ikona"
+  },
+  "fieldIconText": {
+    "message": "Tekst ikony"
+  },
+  "fieldColor": {
+    "message": "Kolor tła"
+  },
+  "fieldSymbol": {
+    "message": "Symbol"
+  },
+  "fieldSymbolHint": {
+    "message": "Emoji lub kilka liter."
+  },
+  "useLetters": {
+    "message": "Użyj liter"
+  },
+  "useImage": {
+    "message": "Użyj obrazu"
+  },
+  "iconScale": {
+    "message": "Rozmiar obrazu"
+  },
+  "websiteImages": {
+    "message": "Automatycznie pobieraj obrazy stron"
+  },
+  "websiteImagesHint": {
+    "message": "Gdy dodajesz skrót, jego obraz jest pobierany ze strony głównej tej witryny, bez plików cookie, i zostaje na Twoim urządzeniu."
+  },
+  "websiteImagesAllow": {
+    "message": "Aby automatycznie pobierać obrazy stron, przeglądarka potrzebuje jednorazowej zgody."
+  },
+  "websiteImagesInSettings": {
+    "message": "Aby pobierać obrazy stron, zezwól na to w Ustawienia > Skróty na nowej karcie."
+  },
+  "allow": {
+    "message": "Zezwól"
+  },
+  "finding": {
+    "message": "Szukanie obrazu strony…"
+  },
+  "chooseFile": {
+    "message": "Wybierz plik"
+  },
+  "urlInvalid": {
+    "message": "Podaj poprawny adres strony."
+  },
+  "imageTypeUnsupported": {
+    "message": "Ten typ obrazu nie jest obsługiwany."
+  },
+  "imageTooLarge": {
+    "message": "Obraz musi być mniejszy niż $1."
+  },
+  "imageSaveFailed": {
+    "message": "Nie udało się zapisać obrazu."
+  },
+  "websiteImageNotFound": {
+    "message": "Nie znaleziono obrazu dla tej strony."
+  },
+  "privateNotAllowed": {
+    "message": "Najpierw zezwól tej wtyczce na działanie w oknach prywatnych na stronie rozszerzeń przeglądarki."
+  },
+  "openFailed": {
+    "message": "Nie udało się otworzyć tego adresu."
+  },
+  "popupCantAdd": {
+    "message": "Nie można dodać tej strony. Jako skróty można zapisywać tylko strony internetowe."
+  },
+  "openCurrent": {
+    "message": "Bieżąca karta"
+  },
+  "openNew": {
+    "message": "Nowa karta"
+  },
+  "openBackground": {
+    "message": "Karta w tle"
+  },
+  "openPrivate": {
+    "message": "Okno prywatne"
+  },
+  "searchPlaceholder": {
+    "message": "Szukaj"
+  },
+  "searchEngines": {
+    "message": "Wyszukiwarki"
+  },
+  "searchBoxSection": {
+    "message": "Pole wyszukiwania"
+  },
+  "searchResultsSection": {
+    "message": "Wyniki i historia"
+  },
+  "searchEnginesHint": {
+    "message": "Wybierz wyszukiwarkę w polu wyszukiwania na stronie."
+  },
+  "searchHistory": {
+    "message": "Historia wyszukiwania"
+  },
+  "engineBrowserDefault": {
+    "message": "Domyślna przeglądarki"
+  },
+  "showSearchBox": {
+    "message": "Pokazuj pole wyszukiwania"
+  },
+  "searchWidth": {
+    "message": "Szerokość pola wyszukiwania"
+  },
+  "searchHeight": {
+    "message": "Wysokość pola wyszukiwania"
+  },
+  "searchRoundness": {
+    "message": "Zaokrąglenie narożników"
+  },
+  "openResultsIn": {
+    "message": "Otwieraj wyniki w"
+  },
+  "searchHistorySetting": {
+    "message": "Zapamiętuj moje wyszukiwania"
+  },
+  "searchHistoryHint": {
+    "message": "Tylko na tym urządzeniu. Wyłączenie czyści historię."
+  },
+  "addSearchEngine": {
+    "message": "Dodaj wyszukiwarkę"
+  },
+  "fieldEngineUrl": {
+    "message": "Adres wyszukiwania"
+  },
+  "engineUrlHint": {
+    "message": "Użyj %s w miejscu szukanej frazy."
+  },
+  "engineUrlInvalid": {
+    "message": "Podaj adres strony zawierający %s."
+  },
+  "engineDeleteConfirm": {
+    "message": "Usunąć wyszukiwarkę „$1”?"
+  },
+  "tabAppearance": {
+    "message": "Wygląd"
+  },
+  "tabShortcuts": {
+    "message": "Skróty"
+  },
+  "tabSidebar": {
+    "message": "Grupy i pasek boczny"
+  },
+  "tabSearch": {
+    "message": "Wyszukiwanie"
+  },
+  "tabClock": {
+    "message": "Zegar i czuwanie"
+  },
+  "tabData": {
+    "message": "Dane i prywatność"
+  },
+  "theme": {
+    "message": "Motyw kolorów"
+  },
+  "themeSystem": {
+    "message": "Jak w systemie"
+  },
+  "themeLight": {
+    "message": "Jasny"
+  },
+  "themeDark": {
+    "message": "Ciemny"
+  },
+  "colorsSection": {
+    "message": "Kolory"
+  },
+  "wallpaperSection": {
+    "message": "Tapeta"
+  },
+  "sidebar": {
+    "message": "Pasek boczny"
+  },
+  "sidebarSide": {
+    "message": "Położenie paska bocznego"
+  },
+  "sideLeft": {
+    "message": "Po lewej"
+  },
+  "sideRight": {
+    "message": "Po prawej"
+  },
+  "sidebarAutoHide": {
+    "message": "Ukrywaj pasek, dopóki nie najedziesz na niego kursorem"
+  },
+  "sidebarNarrow": {
+    "message": "Pokazuj same symbole, dopóki nie najedziesz kursorem"
+  },
+  "sidebarWidth": {
+    "message": "Szerokość paska bocznego"
+  },
+  "scrollToSwitch": {
+    "message": "Przełączaj grupy kółkiem myszy"
+  },
+  "scrollToSwitchHint": {
+    "message": "Po ostatniej grupie wraca do pierwszej."
+  },
+  "rememberLastGroup": {
+    "message": "Otwieraj ostatnio używaną grupę"
+  },
+  "rememberLastGroupHint": {
+    "message": "Gdy to wyłączone, nowe karty zaczynają od pierwszej grupy."
+  },
+  "layoutPreset": {
+    "message": "Gotowy układ"
+  },
+  "presetCompact": {
+    "message": "Zwarty"
+  },
+  "presetBalanced": {
+    "message": "Zrównoważony"
+  },
+  "presetSpacious": {
+    "message": "Przestronny"
+  },
+  "presetWide": {
+    "message": "Szeroki"
+  },
+  "layout": {
+    "message": "Układ"
+  },
+  "arrangement": {
+    "message": "Liczba kolumn"
+  },
+  "arrangementAuto": {
+    "message": "Tyle, ile się zmieści"
+  },
+  "arrangementColumns": {
+    "message": "Stała liczba"
+  },
+  "columns": {
+    "message": "Kolumny"
+  },
+  "maxColumns": {
+    "message": "Maksymalna liczba kolumn"
+  },
+  "tileSize": {
+    "message": "Rozmiar skrótów"
+  },
+  "rowGap": {
+    "message": "Odstęp między wierszami"
+  },
+  "columnGap": {
+    "message": "Odstęp między kolumnami"
+  },
+  "displayWidth": {
+    "message": "Szerokość obszaru skrótów"
+  },
+  "styleSection": {
+    "message": "Wygląd"
+  },
+  "behaviorSection": {
+    "message": "Zachowanie"
+  },
+  "shortcutOpacity": {
+    "message": "Krycie skrótów"
+  },
+  "searchOpacity": {
+    "message": "Krycie pola wyszukiwania"
+  },
+  "tileStyle": {
+    "message": "Styl skrótów"
+  },
+  "tileStyleCard": {
+    "message": "Karty z opisem"
+  },
+  "tileStyleIcon": {
+    "message": "Ikony"
+  },
+  "shadow": {
+    "message": "Cień pod skrótami"
+  },
+  "shine": {
+    "message": "Połysk po najechaniu"
+  },
+  "fadeTime": {
+    "message": "Czas pojawiania się skrótów"
+  },
+  "fadeTimeHint": {
+    "message": "Ustawia też tempo zmiany grup. 0 wyłącza efekt."
+  },
+  "showLabels": {
+    "message": "Pokazuj nazwy pod ikonami"
+  },
+  "showAddButton": {
+    "message": "Pokazuj kafelek „Dodaj skrót”"
+  },
+  "openShortcutsIn": {
+    "message": "Otwieraj skróty w"
+  },
+  "showClock": {
+    "message": "Pokazuj zegar"
+  },
+  "clockSection": {
+    "message": "Zegar"
+  },
+  "hour24": {
+    "message": "Używaj formatu 24-godzinnego"
+  },
+  "standby": {
+    "message": "Ekran czuwania"
+  },
+  "standbyEnabled": {
+    "message": "Pokazuj ekran czuwania podczas bezczynności"
+  },
+  "standbyHint": {
+    "message": "Zegar na pełnym ekranie po okresie bezczynności."
+  },
+  "standbyOnNewTab": {
+    "message": "Pokazuj też na każdej nowej karcie"
+  },
+  "standbyDelay": {
+    "message": "Czas bezczynności przed pojawieniem się"
+  },
+  "standbyBlur": {
+    "message": "Rozmycie tła ekranu czuwania"
+  },
+  "standbyClock": {
+    "message": "Pokazuj zegar na ekranie czuwania"
+  },
+  "standbyDismiss": {
+    "message": "Zamknij ekran czuwania"
+  },
+  "wallpaperSource": {
+    "message": "Rodzaj tapety"
+  },
+  "wallpaperScene": {
+    "message": "Animowana scena"
+  },
+  "wallpaperImage": {
+    "message": "Twoje obrazy"
+  },
+  "wallpaperColor": {
+    "message": "Jednolity kolor"
+  },
+  "wallpaperSceneChoice": {
+    "message": "Scena"
+  },
+  "wallpaperColorChoice": {
+    "message": "Kolor tapety"
+  },
+  "sceneAurora": {
+    "message": "Zorza"
+  },
+  "sceneLanterns": {
+    "message": "Lampiony"
+  },
+  "addImages": {
+    "message": "Dodaj obrazy"
+  },
+  "useWallpaper": {
+    "message": "Użyj tej tapety"
+  },
+  "nextWallpaper": {
+    "message": "Następna tapeta"
+  },
+  "downloadWallpaper": {
+    "message": "Pobierz obraz"
+  },
+  "wallpaperDeleteConfirm": {
+    "message": "Usunąć tę tapetę?"
+  },
+  "rotateEvery": {
+    "message": "Automatycznie zmieniaj obraz"
+  },
+  "rotateNever": {
+    "message": "Nigdy"
+  },
+  "rotateMinutes": {
+    "message": "Co $1 minut"
+  },
+  "rotateHours": {
+    "message": "Co $1 godzin"
+  },
+  "rotateHour": {
+    "message": "Co godzinę"
+  },
+  "rotateDaily": {
+    "message": "Codziennie"
+  },
+  "wallpaperBlur": {
+    "message": "Rozmycie tapety"
+  },
+  "accentFromWallpaper": {
+    "message": "Dopasuj kolor akcentu do tapety"
+  },
+  "accentFromWallpaperHint": {
+    "message": "Przyciski i wyróżnienia przyjmują kolor z tapety."
+  },
+  "backup": {
+    "message": "Kopia zapasowa"
+  },
+  "backupHint": {
+    "message": "Zapisuje wszystko, także obrazy, do pliku, który zachowujesz u siebie. Dane nie są przechowywane nigdzie indziej, więc to Twoja jedyna kopia."
+  },
+  "exportBackup": {
+    "message": "Zapisz kopię"
+  },
+  "restoreBackup": {
+    "message": "Przywróć z pliku kopii"
+  },
+  "restore": {
+    "message": "Przywróć"
+  },
+  "restoreConfirm": {
+    "message": "Zastąpić wszystko tą kopią (skróty: $1)?"
+  },
+  "restoreDone": {
+    "message": "Przywrócono kopię."
+  },
+  "restoreFailed": {
+    "message": "Ten plik nie jest poprawną kopią."
+  },
+  "restoreTooNew": {
+    "message": "Ta kopia pochodzi z nowszej wersji."
+  },
+  "backupFailed": {
+    "message": "Nie udało się utworzyć kopii."
+  },
+  "bookmarks": {
+    "message": "Zakładki"
+  },
+  "importBookmarks": {
+    "message": "Importuj zakładki jako skróty"
+  },
+  "exportBookmarks": {
+    "message": "Eksportuj skróty do zakładek"
+  },
+  "importCount": {
+    "message": "Importuj ($1)"
+  },
+  "bookmarkAccessNeeded": {
+    "message": "Zezwól na dostęp do zakładek, aby kontynuować."
+  },
+  "bookmarksEmpty": {
+    "message": "Brak zakładek do zaimportowania."
+  },
+  "bookmarksFailed": {
+    "message": "Nie udało się odczytać ani zapisać zakładek."
+  },
+  "bookmarksImported": {
+    "message": "Dodano skróty: $1."
+  },
+  "bookmarksExported": {
+    "message": "Skopiowano skróty na pasek zakładek: $1."
+  },
+  "bookmarkLimit": {
+    "message": "Wybierz naraz maksymalnie $1 zakładek."
+  },
+  "privacy": {
+    "message": "Prywatność"
+  },
+  "privacyStatement": {
+    "message": "Twoje skróty, ustawienia i obrazy zostają na tym urządzeniu. Nie ma konta, synchronizacji, analityki ani serwera."
+  },
+  "privacyFavicon": {
+    "message": "Jedyne połączenie to pobranie obrazu strony podczas dodawania skrótu. Możesz to wyłączyć w sekcji Skróty > Zachowanie. Otwierane strony i wyszukiwarki widzą Twoją wizytę jak zwykle."
+  }
+}
