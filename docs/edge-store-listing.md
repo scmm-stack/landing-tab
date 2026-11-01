@@ -7,6 +7,14 @@ Text to paste into Partner Center. It isn't part of the extension.
 - **Category:** Productivity
 - **Support contact:** <https://github.com/scmm-stack/landing-tab/issues>
 
+**Extension logo:** `docs/store-logo-300.png`, for each language
+
+**Small promotional tile:** `docs/store-tile-440x280.png`
+
+**Large promotional tile:** `docs/store-tile-1400x560.png`
+
+**Screenshots:** `docs/store-screenshot-1.png`
+
 ## Privacy page
 
 **Single purpose:** Replaces the new tab page with a dashboard of the user's own shortcuts, with search, a clock and wallpapers.
@@ -61,6 +69,12 @@ Landing Tab zamienia stronę nowej karty w pulpit z Twoimi skrótami i przechowu
 Obrazy witryn są opcjonalne i wymagają jednorazowej zgody. Łączą się tylko z dodawaną witryną, bez plików cookie i bez odsyłacza.
 
 Dostępne po angielsku i po polsku.
+
+## Search terms
+
+**English:** privacy new tab, privacy focused new tab, private start page, no tracking, new tab dashboard, new tab page, speed dial
+
+**Polish:** prywatność, nowa karta z prywatnością, prywatna strona startowa, bez śledzenia, pulpit nowej karty, strona nowej karty, szybkie wybieranie
 
 ## Notes for certification
 

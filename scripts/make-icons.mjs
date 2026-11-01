@@ -73,4 +73,7 @@ function png(size) {
 const dir = new URL('../public/icon/', import.meta.url);
 mkdirSync(dir, { recursive: true });
 for (const size of [16, 32, 48, 128]) writeFileSync(new URL(`${size}.png`, dir), png(size));
+
+// For the store listing only, so it stays out of the extension.
+writeFileSync(new URL('../docs/store-logo-300.png', import.meta.url), png(300));
 console.log('Icons written');
