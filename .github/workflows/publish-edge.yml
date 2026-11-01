@@ -38,6 +38,26 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag }}
         run: gh release download "$TAG" --pattern '*-edge.zip' --dir release
+      # The publisher's dry run skips Edge entirely, so this asks about a made-up
+      # upload. It changes nothing, and only a refused login counts as a failure.
+      - name: Check the Edge credentials
+        if: inputs.dry_run
+        env:
+          EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
+          EDGE_CLIENT_ID: ${{ secrets.EDGE_CLIENT_ID }}
+          EDGE_API_KEY: ${{ secrets.EDGE_API_KEY }}
+        run: |
+          status=$(curl -s -m 30 -o /dev/null -w '%{http_code}' \
+            -H "Authorization: ApiKey $EDGE_API_KEY" \
+            -H "X-ClientID: $EDGE_CLIENT_ID" \
+            "https://api.addons.microsoftedge.microsoft.com/v1/products/$EDGE_PRODUCT_ID/submissions/draft/package/operations/00000000-0000-0000-0000-000000000000")
+          echo "Edge answered $status"
+          case "$status" in
+            000|401|403|410)
+              echo "::error::Edge refused these credentials ($status)"
+              exit 1
+              ;;
+          esac
       - name: Submit to Microsoft Edge Add-ons
         env:
           DRY_RUN: ${{ inputs.dry_run }}
