@@ -34,13 +34,15 @@ The content security policy has to allow web connections for image lookup, so th
 
 ## Install for local testing
 
-Build first:
+Build first, on Linux with Node 24 and npm 11. Releases are built on Ubuntu:
 
 ```
 npm ci
 npm run setup
 npm run build
 ```
+
+The results are in `.output`. To build only the Firefox version, use `npm run build:firefox`, which writes to `.output/firefox-mv3`.
 
 **Edge or Chrome** stays installed across restarts:
 
