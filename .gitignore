@@ -6,3 +6,4 @@ node_modules/
 web-ext-artifacts/
 test-results/
 .forbidden-terms
+CLAUDE.md
