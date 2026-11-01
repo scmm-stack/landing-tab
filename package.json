@@ -17,6 +17,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint:firefox": "npx --yes web-ext@10.8.0 lint --source-dir .output/firefox-mv3 --no-config-discovery",
+    "check:sources": "node scripts/check-sources.mjs",
     "test": "vitest run",
     "scan": "node scripts/scan-build.mjs",
     "verify": "npm run typecheck && npm run lint && npm run test && npm run build && npm run scan && npm run lint:firefox",

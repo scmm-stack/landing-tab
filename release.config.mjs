@@ -10,7 +10,7 @@ export default {
     ['@semantic-release/commit-analyzer', { preset: 'conventionalcommits', releaseRules: [{ breaking: true, release: 'minor' }] }],
     ['@semantic-release/release-notes-generator', { preset: 'conventionalcommits' }],
     ['@semantic-release/npm', { npmPublish: false }],
-    ['@semantic-release/exec', { prepareCmd: 'npm run zip' }],
+    ['@semantic-release/exec', { prepareCmd: 'npm run zip && npm run check:sources' }],
     [
       '@semantic-release/github',
       {
