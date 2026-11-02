@@ -942,7 +942,12 @@ async function privateSearchFlow(kind, dir) {
       const manager = await browser.newPage();
       await manager.goto(`${kind}://extensions`);
       await sleep(800);
-      await manager.evaluate((extensionId) => chrome.developerPrivate.updateExtensionConfiguration({ extensionId, incognitoAccess: true }), id);
+      // The change reloads the extension, and Chrome disables an unpacked one that
+      // reloads outside developer mode. Edge doesn't, but it does no harm there.
+      await manager.evaluate(async (extensionId) => {
+        await chrome.developerPrivate.updateProfileConfiguration({ inDeveloperMode: true });
+        await chrome.developerPrivate.updateExtensionConfiguration({ extensionId, incognitoAccess: true });
+      }, id);
     }
     await sleep(1500);
 
