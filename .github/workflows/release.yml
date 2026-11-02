@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      version: ${{ steps.release.outputs.version }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -27,6 +29,18 @@ jobs:
       - run: npm ci
       - run: npm run setup
       - run: npm run verify
-      - run: npx semantic-release
+      # Sets the version output only when a new release was published.
+      - id: release
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-edge:
+    needs: release
+    if: needs.release.outputs.version != ''
+    permissions:
+      contents: read
+    uses: ./.github/workflows/publish-edge.yml
+    with:
+      tag: v${{ needs.release.outputs.version }}
+    secrets: inherit
