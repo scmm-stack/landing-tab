@@ -250,12 +250,30 @@ input[type='color'] {
 
 .sidebar.auto-hide.side-left {
   left: 0;
-  transform: translateX(calc(-100% + 10px));
+  transform: translateX(-100%);
 }
 
 .sidebar.auto-hide.side-right {
   right: 0;
-  transform: translateX(calc(100% - 10px));
+  transform: translateX(100%);
+}
+
+/* An invisible strip along the screen edge. It belongs to the sidebar, so the cursor
+   reaching the edge counts as hovering it, with nothing of the panel left on screen. */
+.sidebar.auto-hide::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0.625rem;
+}
+
+.sidebar.auto-hide.side-left::before {
+  left: 100%;
+}
+
+.sidebar.auto-hide.side-right::before {
+  right: 100%;
 }
 
 /* Keyboard focus only: a mouse click leaves focus behind, which would hold it open. */
