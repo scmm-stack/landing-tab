@@ -1,7 +1,8 @@
 /**
  * The version lives in the git tag. package.json is bumped only inside the
  * release run, so the build picks the version up and nothing is pushed back to
- * main. Store uploads are separate: see .github/workflows/publish-edge.yml.
+ * main. After a release, the version goes to the workflow's output, and
+ * release.yml hands that tag to .github/workflows/publish-edge.yml.
  */
 export default {
   branches: ['main'],
@@ -10,7 +11,13 @@ export default {
     ['@semantic-release/commit-analyzer', { preset: 'conventionalcommits', releaseRules: [{ breaking: true, release: 'minor' }] }],
     ['@semantic-release/release-notes-generator', { preset: 'conventionalcommits' }],
     ['@semantic-release/npm', { npmPublish: false }],
-    ['@semantic-release/exec', { prepareCmd: 'npm run zip && npm run check:sources' }],
+    [
+      '@semantic-release/exec',
+      {
+        prepareCmd: 'npm run zip && npm run check:sources',
+        successCmd: 'echo "version=${nextRelease.version}" >> "$GITHUB_OUTPUT"',
+      },
+    ],
     [
       '@semantic-release/github',
       {

@@ -1,9 +1,22 @@
 name: Publish to Edge
 
-# Started by hand. Certification can take days, and a release made with the
-# default GitHub token can't start another workflow anyway. It uploads the exact
-# package attached to the GitHub Release, so what ships is what was verified.
+# Runs after every release, called from release.yml. A release made with the
+# default GitHub token can't start another workflow by an event, so it is called
+# directly. It can still be started by hand, for a dry run or to retry a release
+# that Edge refused. It uploads the exact package attached to the GitHub Release,
+# so what ships is what was verified. Edge then certifies it, which can take days.
 on:
+  workflow_call:
+    inputs:
+      tag:
+        description: Release tag, such as v1.2.0
+        required: true
+        type: string
+      dry_run:
+        description: Only check the credentials
+        required: false
+        type: boolean
+        default: false
   workflow_dispatch:
     inputs:
       tag:
