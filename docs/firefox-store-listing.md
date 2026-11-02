@@ -14,6 +14,7 @@ Text for the add-on's page on addons.mozilla.org. It isn't part of the extension
 
 - **Categories:** Tabs, Privacy & Security
 - **Support website:** <https://github.com/scmm-stack/landing-tab/issues>
+- **License:** MIT License
 - **Summary:** A new tab dashboard that keeps everything on your device. No account, no tracking.
 - **Privacy policy:** Paste `PRIVACY.md`
 
