@@ -683,9 +683,9 @@ async function hiddenSidebarFlow(kind, page) {
     await page.mouse.move(700, 300);
     await sleep(300);
   };
-  const hidden = () => page.$eval('.sidebar', (e) => e.getBoundingClientRect().right < 20);
+  const hidden = () => page.$eval('.sidebar', (e) => e.getBoundingClientRect().right <= 0);
   await away();
-  check(kind, 'the sidebar starts hidden', await hidden());
+  check(kind, 'the sidebar starts hidden, with nothing left on screen', await hidden());
   await page.mouse.move(3, 300);
   await sleep(300);
   check(kind, 'hovering at the edge shows the sidebar', !(await hidden()));
