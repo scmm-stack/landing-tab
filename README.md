@@ -98,3 +98,7 @@ The first Edge upload has to be done by hand in Partner Center, because the API 
 - To change text, edit `scripts/i18n-source.mjs`, then run `node scripts/build-locales.mjs`.
 
 An optional, untracked `.forbidden-terms` file lists extra words the scan must reject, one per line.
+
+## License
+
+[MIT](LICENSE)
