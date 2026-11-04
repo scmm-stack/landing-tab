@@ -1,0 +1,93 @@
+name: Publish to Firefox
+
+# Runs after every release, called from release.yml, and can still be started by
+# hand for a dry run or a retry. It uploads the exact packages attached to the
+# GitHub Release: the add-on and the source code, which Mozilla's reviewers need
+# because the build is bundled. Mozilla then reviews it before it goes live.
+on:
+  workflow_call:
+    inputs:
+      tag:
+        description: Release tag, such as v1.2.0
+        required: true
+        type: string
+      dry_run:
+        description: Only check the credentials
+        required: false
+        type: boolean
+        default: false
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag, such as v1.2.0
+        required: true
+        type: string
+      dry_run:
+        description: Only check the credentials
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: amo-store
+    env:
+      # The add-on ID set in wxt.config.ts. It is stored data, so it never changes.
+      FIREFOX_EXTENSION_ID: landing-tab@scmm-stack.dev
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.tag }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Download the released packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          gh release download "$TAG" --pattern '*-firefox.zip' --pattern '*-sources.zip' --dir release
+          ls release
+      # The publisher's dry run skips the store entirely, so this signs in to
+      # Mozilla's API and reads the account's own profile. It changes nothing.
+      - name: Check the AMO credentials
+        if: inputs.dry_run
+        env:
+          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: |
+          if [ -z "$AMO_JWT_ISSUER" ] || [ -z "$AMO_JWT_SECRET" ]; then
+            echo "::error::AMO_JWT_ISSUER or AMO_JWT_SECRET is empty in the amo-store environment"
+            exit 1
+          fi
+          token=$(node -e '
+            const { createHmac, randomUUID } = require("node:crypto");
+            const b64 = (v) => Buffer.from(JSON.stringify(v)).toString("base64url");
+            const iat = Math.floor(Date.now() / 1000);
+            const body = b64({ alg: "HS256", typ: "JWT" }) + "." + b64({ iss: process.env.AMO_JWT_ISSUER, jti: randomUUID(), iat, exp: iat + 60 });
+            console.log(body + "." + createHmac("sha256", process.env.AMO_JWT_SECRET).update(body).digest("base64url"));
+          ')
+          status=$(curl -s -m 30 -o /dev/null -w '%{http_code}' \
+            -H "Authorization: JWT $token" \
+            https://addons.mozilla.org/api/v5/accounts/profile/)
+          echo "AMO answered $status"
+          if [ "$status" != "200" ]; then
+            echo "::error::AMO refused these credentials ($status)"
+            exit 1
+          fi
+      - name: Submit to Firefox Add-ons
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+          FIREFOX_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          FIREFOX_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: |
+          args=(--firefox-zip release/*-firefox.zip --firefox-sources-zip release/*-sources.zip)
+          if [ "$DRY_RUN" = "true" ]; then args+=(--dry-run); fi
+          npx wxt submit "${args[@]}"
