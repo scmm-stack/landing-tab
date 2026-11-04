@@ -1,7 +1,7 @@
 import tseslint from 'typescript-eslint';
 
 const NETWORK_MESSAGE =
-  'Network access is only allowed in src/lib/favicon.ts. This extension keeps data on the device.';
+  'Network access is only allowed in src/lib/favicon.ts and src/lib/library.ts. This extension keeps data on the device.';
 
 const networkGlobals = ['fetch', 'XMLHttpRequest', 'WebSocket', 'EventSource', 'Worker', 'SharedWorker'];
 
@@ -35,7 +35,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['src/lib/favicon.ts'],
+    files: ['src/lib/favicon.ts', 'src/lib/library.ts'],
     rules: { 'no-restricted-globals': 'off', 'no-restricted-properties': 'off' },
   },
   {

@@ -49,7 +49,7 @@ Landing Tab turns your new tab page into a dashboard of your own shortcuts, and 
 - Import and export bookmarks
 - Back up and restore everything through a file you keep
 
-Website images are optional and need your permission once. They contact only the site you're adding, with no cookies and no referrer.
+Website images are optional and need your permission once. They contact only the site you're adding, with no cookies and no referrer. The optional Extension library wallpapers download from the extension's GitHub repository.
 
 Available in English and Polish.
 
@@ -66,7 +66,7 @@ Landing Tab zamienia stronę nowej karty w pulpit z Twoimi skrótami i przechowu
 - Importuj i eksportuj zakładki
 - Twórz kopię zapasową i przywracaj wszystko z pliku, który zachowujesz u siebie
 
-Obrazy witryn są opcjonalne i wymagają jednorazowej zgody. Łączą się tylko z dodawaną witryną, bez plików cookie i bez odsyłacza.
+Obrazy witryn są opcjonalne i wymagają jednorazowej zgody. Łączą się tylko z dodawaną witryną, bez plików cookie i bez odsyłacza. Opcjonalne tapety z biblioteki rozszerzenia są pobierane z jego repozytorium w serwisie GitHub.
 
 Dostępne po angielsku i po polsku.
 

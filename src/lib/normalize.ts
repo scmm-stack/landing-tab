@@ -1,5 +1,7 @@
+import { LIBRARY_FILE_NAME } from './library';
 import {
   BUILT_IN_ENGINES,
+  LIBRARY_INTERVALS,
   type AppState,
   type Dashboard,
   type Engine,
@@ -104,13 +106,16 @@ export function normalizeSettings(input: unknown): Settings {
   s.standby.blur = clamp(s.standby.blur, 0, 40);
 
   const w = s.wallpaper;
-  w.source = oneOf(w.source, ['color', 'image', 'scene'], d.wallpaper.source);
+  w.source = oneOf(w.source, ['color', 'image', 'scene', 'library'], d.wallpaper.source);
   w.color = color(w.color, d.wallpaper.color);
   w.imageIds = w.imageIds.filter((id): id is string => typeof id === 'string');
   w.activeImageId = w.activeImageId !== null && w.imageIds.includes(w.activeImageId) ? w.activeImageId : w.imageIds[0] ?? null;
   w.rotateMinutes = clamp(w.rotateMinutes, 0, 10080);
   w.blur = clamp(w.blur, 0, 40);
   w.scene = oneOf(w.scene, ['aurora', 'lanterns'], d.wallpaper.scene);
+  w.libraryImage = w.libraryImage !== null && LIBRARY_FILE_NAME.test(w.libraryImage) ? w.libraryImage : null;
+  if (!(LIBRARY_INTERVALS as readonly number[]).includes(w.libraryRotateMinutes)) w.libraryRotateMinutes = d.wallpaper.libraryRotateMinutes;
+  w.libraryRotatedAt = Math.max(0, w.libraryRotatedAt);
   return s;
 }
 

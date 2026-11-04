@@ -19,12 +19,13 @@ A new tab dashboard for Firefox, Edge and Chrome that keeps everything on your d
 
 ## What leaves your device
 
-Only two things, both started by you:
+Only these, each started by you:
 
 | Action | What is contacted |
 | --- | --- |
 | Opening a shortcut or submitting a search | That website or search engine, as with any link |
 | Adding a shortcut | That website's home page and icon, once, with no cookies and no referrer |
+| Choosing **Extension library** as the wallpaper | GitHub, for the list of library images at most once a day and each image once, with no cookies and no referrer |
 
 Website images need your permission once, and **Settings > Shortcuts > Fetch website images automatically** turns them off and hands the permission back. A lookup starts when you leave the address field or open the toolbar button, and it never sends the page's path or query. You can always set an image from a file instead.
 
@@ -90,7 +91,7 @@ The first Edge upload has to be done by hand in Partner Center, because the API 
 
 ### Rules
 
-- `src/lib/favicon.ts` is the only module allowed to use the network.
+- `src/lib/favicon.ts` and `src/lib/library.ts` are the only modules allowed to use the network.
 - New permissions, CSP changes, or unexpected addresses fail `npm run scan`.
 - Anything read from storage or a backup goes through `src/lib/normalize.ts`.
 - There is no background script.

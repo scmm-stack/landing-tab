@@ -5,7 +5,7 @@ export type ThemeMode = 'system' | 'light' | 'dark';
 export type SidebarSide = 'left' | 'right';
 export type LayoutMode = 'fixedSize' | 'fixedColumns';
 export type TileStyle = 'card' | 'icon';
-export type WallpaperSource = 'color' | 'image' | 'scene';
+export type WallpaperSource = 'color' | 'image' | 'scene' | 'library';
 export type SceneId = 'aurora' | 'lanterns';
 
 export type Tile =
@@ -102,8 +102,15 @@ export interface Settings {
     blur: number;
     scene: SceneId;
     pageColorsFollow: boolean;
+    /** A file name in the extension's library. Null shows the first one. */
+    libraryImage: string | null;
+    libraryRotateMinutes: number;
+    libraryRotatedAt: number;
   };
 }
+
+/** How often the library wallpaper can change by itself, in minutes. 0 is never. */
+export const LIBRARY_INTERVALS = [0, 60, 120, 360, 720, 1440] as const;
 
 /** UI state worth keeping between tabs but not worth backing up. */
 export interface Session {
@@ -184,6 +191,9 @@ export function defaultSettings(): Settings {
       blur: 0,
       scene: 'aurora',
       pageColorsFollow: false,
+      libraryImage: null,
+      libraryRotateMinutes: 0,
+      libraryRotatedAt: 0,
     },
   };
 }

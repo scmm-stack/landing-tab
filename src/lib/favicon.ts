@@ -1,8 +1,9 @@
 import { browser } from 'wxt/browser';
 import { MAX_TILE_IMAGE_BYTES, isAllowedImage } from './images';
+import { readCapped } from './stream';
 
 /**
- * THE ONLY MODULE ALLOWED TO USE THE NETWORK.
+ * ONE OF TWO MODULES ALLOWED TO USE THE NETWORK. The other is library.ts.
  *
  * It runs only while someone is adding a shortcut, and only after they have given
  * site access. It contacts only that site, asking for its home page rather than
@@ -108,31 +109,6 @@ export function iconsFromManifest(manifest: unknown, manifestUrl: string): IconC
     if (url) icons.push({ url, size: largestSize(typeof entry.sizes === 'string' ? entry.sizes : null) });
   }
   return icons;
-}
-
-async function readCapped(response: Response, limit: number): Promise<Uint8Array | null> {
-  const declared = Number(response.headers.get('content-length'));
-  if (declared > limit || !response.body) return null;
-  const reader = response.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let total = 0;
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    total += value.byteLength;
-    if (total > limit) {
-      await reader.cancel();
-      return null;
-    }
-    chunks.push(value);
-  }
-  const out = new Uint8Array(total);
-  let offset = 0;
-  for (const chunk of chunks) {
-    out.set(chunk, offset);
-    offset += chunk.byteLength;
-  }
-  return out;
 }
 
 async function getText(url: string, limit: number, signal: AbortSignal): Promise<{ text: string; finalUrl: string } | null> {
