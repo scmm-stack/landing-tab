@@ -201,6 +201,23 @@ describe('findSiteIcon', () => {
     expect(new Uint8Array(await icon!.arrayBuffer())).toEqual(png(64));
   });
 
+  it('finds nothing rather than an icon too small to look sharp', async () => {
+    stubNetwork({
+      'https://site.example/': { body: '<link rel="icon" sizes="32x32" href="/s.png">', type: 'text/html' },
+      'https://site.example/s.png': { body: png(32), type: 'image/png' },
+      'https://site.example/apple-touch-icon.png': { body: png(60), type: 'image/png' },
+    });
+    expect(await findSiteIcon('https://site.example/', keep)).toBeNull();
+  });
+
+  it('accepts an icon of exactly the minimum size', async () => {
+    stubNetwork({
+      'https://site.example/': { body: '<link rel="icon" href="/m.png">', type: 'text/html' },
+      'https://site.example/m.png': { body: png(64), type: 'image/png' },
+    });
+    expect(await findSiteIcon('https://site.example/', keep)).not.toBeNull();
+  });
+
   it('prefers SVG, which is sharp at any size', async () => {
     const calls = stubNetwork({
       'https://site.example/': { body: '<link rel="apple-touch-icon" sizes="180x180" href="/touch.png"><link rel="icon" href="/logo.svg">', type: 'text/html' },

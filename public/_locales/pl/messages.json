@@ -135,7 +135,7 @@
     "message": "Nie udało się zapisać obrazu."
   },
   "websiteImageNotFound": {
-    "message": "Nie znaleziono obrazu dla tej strony."
+    "message": "Nie znaleziono wyraźnego obrazu dla tej strony. Możesz zamiast tego wybrać plik."
   },
   "privateNotAllowed": {
     "message": "Najpierw zezwól tej wtyczce na działanie w oknach prywatnych na stronie rozszerzeń przeglądarki."

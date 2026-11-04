@@ -36,6 +36,8 @@ export interface IconCandidate {
 
 /** Sharp on a 64px tile on a high-resolution screen. */
 export const TARGET_SIZE = 128;
+/** Anything smaller looks blurry on a tile, so the shortcut keeps its letters instead. */
+export const MIN_SIZE = 64;
 const MAX_ICON_REQUESTS = 6;
 const SOURCE_ORDER: IconSource[] = ['icon', 'touch', 'manifest', 'guess'];
 
@@ -198,7 +200,7 @@ export async function findSiteIcon(pageUrl: string, tidy: (icon: Blob) => Promis
     candidates.push({ url: new URL('/apple-touch-icon.png', finalUrl).href, size: 180, source: 'guess' });
     candidates.push({ url: new URL('/favicon.ico', finalUrl).href, size: 1, source: 'guess' });
 
-    // The first big enough wins. Failing that, the biggest one found.
+    // The first big enough wins. Failing that, the biggest one found, if it isn't too small.
     let best: { blob: Blob; size: number } | null = null;
     for (const candidate of order(candidates).slice(0, MAX_ICON_REQUESTS)) {
       const icon = await getIcon(candidate.url, signal).catch(() => null);
@@ -208,7 +210,7 @@ export async function findSiteIcon(pageUrl: string, tidy: (icon: Blob) => Promis
       if (!best || size > best.size) best = { blob: icon.blob, size };
       if (size >= TARGET_SIZE) break;
     }
-    return best ? await tidy(best.blob) : null;
+    return best && best.size >= MIN_SIZE ? await tidy(best.blob) : null;
   } finally {
     clearTimeout(timer);
   }

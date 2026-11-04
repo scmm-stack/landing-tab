@@ -135,7 +135,7 @@
     "message": "The image could not be saved."
   },
   "websiteImageNotFound": {
-    "message": "No image was found for this website."
+    "message": "No sharp image was found for this website. You can choose a file instead."
   },
   "privateNotAllowed": {
     "message": "Allow this extension in private windows first, on the browser's extensions page."
