@@ -14,7 +14,7 @@ const ICON = readFileSync(new URL('../../public/icon/128.png', import.meta.url))
 // Shaped like a real home page, because the inline style and script tags matter: the
 // extension's content security policy refuses them if they ever reach a parser.
 const PAGE = `<!doctype html><html><head><title>Test</title>
-<link rel="stylesheet" href="/site.css"><style>body { color: red }</style>
+<link rel="stylesheet" href="/site.css" onload="tracked()"><style>body { color: red }</style>
 <link rel="icon" sizes="16x16" href="/small-icon.png"><link rel="icon" sizes="128x128" href="http://${ASSET_HOST}/site-icon.png">
 <script>window.tracked = true</script><script src="/app.js"></script></head>
 <body style="margin: 0" onload="tracked()"><img src="/photo.jpg" onerror="tracked()"><iframe src="/frame"></iframe>hi</body></html>`;

@@ -50,7 +50,7 @@ export const MESSAGES = [
   ['imageTypeUnsupported', 'This image type is not supported.', 'Ten typ obrazu nie jest obsługiwany.'],
   ['imageTooLarge', 'The image must be smaller than $1.', 'Obraz musi być mniejszy niż $1.'],
   ['imageSaveFailed', 'The image could not be saved.', 'Nie udało się zapisać obrazu.'],
-  ['websiteImageNotFound', 'No sharp image was found for this website. You can choose a file instead.', 'Nie znaleziono wyraźnego obrazu dla tej strony. Możesz zamiast tego wybrać plik.'],
+  ['websiteImageNotFound', 'No image was found for this website.', 'Nie znaleziono obrazu dla tej strony.'],
   ['privateNotAllowed', 'Allow this extension in private windows first, on the browser\'s extensions page.', 'Najpierw zezwól tej wtyczce na działanie w oknach prywatnych na stronie rozszerzeń przeglądarki.'],
   ['openFailed', 'This address could not be opened.', 'Nie udało się otworzyć tego adresu.'],
   ['popupCantAdd', 'This page can\'t be added. Only web pages can be saved as shortcuts.', 'Nie można dodać tej strony. Jako skróty można zapisywać tylko strony internetowe.'],

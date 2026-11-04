@@ -134,6 +134,29 @@ describe('findSiteIcon', () => {
     expect(parsed).toEqual(['<base href="/"><link rel="icon" href="/i.png">']);
   });
 
+  it('keeps only the attributes an icon needs, so no handler ever reaches the parser', async () => {
+    stubNetwork({
+      'https://site.example/': {
+        body: `<link rel="preload" href="/a.css" as="style" onload="this.rel='stylesheet'"><link rel='icon' href='/i.png' onerror="x()" sizes=32x32>`,
+        type: 'text/html',
+      },
+      'https://site.example/i.png': { body: PNG, type: 'image/png' },
+    });
+    const parsed: string[] = [];
+    const Stubbed = globalThis.DOMParser;
+    vi.stubGlobal(
+      'DOMParser',
+      class extends Stubbed {
+        override parseFromString(html: string, type: DOMParserSupportedType) {
+          parsed.push(html);
+          return super.parseFromString(html, type);
+        }
+      },
+    );
+    expect(await findSiteIcon('https://site.example/', keep)).not.toBeNull();
+    expect(parsed).toEqual(['<link rel="preload" href="/a.css"><link rel="icon" href="/i.png" sizes="32x32">']);
+  });
+
   it('uses an icon the page names on another domain, as a visit would load it', async () => {
     const calls = stubNetwork({
       'https://site.example/': { body: '<link rel="icon" sizes="192x192" href="https://assets-cdn.example/icon.png">', type: 'text/html' },
@@ -201,21 +224,32 @@ describe('findSiteIcon', () => {
     expect(new Uint8Array(await icon!.arrayBuffer())).toEqual(png(64));
   });
 
-  it('finds nothing rather than an icon too small to look sharp', async () => {
+  it('still uses a small icon when the site has nothing bigger', async () => {
     stubNetwork({
       'https://site.example/': { body: '<link rel="icon" sizes="32x32" href="/s.png">', type: 'text/html' },
       'https://site.example/s.png': { body: png(32), type: 'image/png' },
-      'https://site.example/apple-touch-icon.png': { body: png(60), type: 'image/png' },
-    });
-    expect(await findSiteIcon('https://site.example/', keep)).toBeNull();
-  });
-
-  it('accepts an icon of exactly the minimum size', async () => {
-    stubNetwork({
-      'https://site.example/': { body: '<link rel="icon" href="/m.png">', type: 'text/html' },
-      'https://site.example/m.png': { body: png(64), type: 'image/png' },
     });
     expect(await findSiteIcon('https://site.example/', keep)).not.toBeNull();
+  });
+
+  it('skips a small icon at the usual touch icon address, which is usually left over', async () => {
+    stubNetwork({
+      'https://site.example/': { body: '', type: 'text/html' },
+      'https://site.example/apple-touch-icon.png': { body: png(60), type: 'image/png' },
+      'https://site.example/favicon.ico': { body: png(32), type: 'image/png' },
+    });
+    const icon = await findSiteIcon('https://site.example/', keep);
+    expect(new Uint8Array(await icon!.arrayBuffer())).toEqual(png(32));
+  });
+
+  it('tells the tidy step how big the icon really is', async () => {
+    stubNetwork({
+      'https://site.example/': { body: '<link rel="icon" href="/s.png">', type: 'text/html' },
+      'https://site.example/s.png': { body: png(32), type: 'image/png' },
+    });
+    const sizes: number[] = [];
+    await findSiteIcon('https://site.example/', async (blob, size) => (sizes.push(size), blob));
+    expect(sizes).toEqual([32]);
   });
 
   it('prefers SVG, which is sharp at any size', async () => {

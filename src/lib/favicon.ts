@@ -2,7 +2,7 @@ import { browser } from 'wxt/browser';
 import { imageSize } from './image-size';
 import { MAX_TILE_IMAGE_BYTES, isAllowedImage } from './images';
 import { readCapped } from './stream';
-import { trimMargins } from './trim';
+import { tidyIcon } from './trim';
 
 /**
  * ONE OF TWO MODULES ALLOWED TO USE THE NETWORK. The other is library.ts.
@@ -32,12 +32,12 @@ export interface IconCandidate {
   /** The size the page claims, Infinity for SVG. Downloaded icons are measured instead. */
   size: number;
   source: IconSource;
+  /** Smaller than this, the icon is skipped. Set for guesses that are only worth it when big. */
+  minSize?: number;
 }
 
 /** Sharp on a 64px tile on a high-resolution screen. */
 export const TARGET_SIZE = 128;
-/** Anything smaller looks blurry on a tile, so the shortcut keeps its letters instead. */
-export const MIN_SIZE = 64;
 const MAX_ICON_REQUESTS = 6;
 const SOURCE_ORDER: IconSource[] = ['icon', 'touch', 'manifest', 'guess'];
 
@@ -88,10 +88,22 @@ export function order(candidates: IconCandidate[]): IconCandidate[] {
     .map(({ c }) => c);
 }
 
+const KEPT_ATTRIBUTES = /\s(rel|href|sizes|type)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))/gi;
+
+/** The tag rebuilt with only the attributes an icon needs. */
+function cleanTag(tag: string): string {
+  const name = /^<(\w+)/.exec(tag)?.[1]?.toLowerCase() ?? 'link';
+  const attributes = Array.from(tag.matchAll(KEPT_ATTRIBUTES), (m) => {
+    const value = (m[2] ?? m[3] ?? m[4] ?? '').replaceAll('"', '&quot;');
+    return ` ${m[1]!.toLowerCase()}="${value}"`;
+  });
+  return `<${name}${attributes.join('')}>`;
+}
+
 export function iconsFromHtml(html: string, pageUrl: string): { icons: IconCandidate[]; manifestUrl: string | null } {
-  // Only these tags hold icons. A whole page would also bring its inline styles and
-  // handlers, and this extension's security policy logs an error for every one it refuses.
-  const tags = html.match(/<(?:link|base)\b[^>]*>/gi)?.join('') ?? '';
+  // Only these tags and attributes hold icons. Anything else, such as an inline handler
+  // on a link tag, would make this extension's security policy log a refusal.
+  const tags = (html.match(/<(?:link|base)\b[^>]*>/gi) ?? []).map(cleanTag).join('');
   const doc = new DOMParser().parseFromString(tags, 'text/html');
   const baseHref = doc.querySelector('base[href]')?.getAttribute('href');
   const base = resolveWebUrl(baseHref, pageUrl) ?? pageUrl;
@@ -174,7 +186,7 @@ export function canLookUp(url: string): boolean {
  * Only the home page is requested. A page's full address can hold private details
  * or a one-time link, and neither should be sent just to find an icon.
  */
-export async function findSiteIcon(pageUrl: string, tidy: (icon: Blob) => Promise<Blob> = trimMargins): Promise<Blob | null> {
+export async function findSiteIcon(pageUrl: string, tidy: (icon: Blob, size: number) => Promise<Blob> = tidyIcon): Promise<Blob | null> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   const { signal } = controller;
@@ -197,20 +209,22 @@ export async function findSiteIcon(pageUrl: string, tidy: (icon: Blob) => Promis
     }
 
     // Usual addresses the page didn't name, asked only of the site the home page ended up on.
-    candidates.push({ url: new URL('/apple-touch-icon.png', finalUrl).href, size: 180, source: 'guess' });
+    // A small one there is usually left over from the first phones, often an old logo.
+    candidates.push({ url: new URL('/apple-touch-icon.png', finalUrl).href, size: 180, source: 'guess', minSize: TARGET_SIZE });
     candidates.push({ url: new URL('/favicon.ico', finalUrl).href, size: 1, source: 'guess' });
 
-    // The first big enough wins. Failing that, the biggest one found, if it isn't too small.
+    // The first big enough wins. Failing that, the biggest one found.
     let best: { blob: Blob; size: number } | null = null;
     for (const candidate of order(candidates).slice(0, MAX_ICON_REQUESTS)) {
       const icon = await getIcon(candidate.url, signal).catch(() => null);
       if (!icon) continue;
       // A format that doesn't say its size is taken at its word, but never as big enough.
       const size = icon.size ?? Math.min(candidate.size, TARGET_SIZE - 1);
+      if (candidate.minSize && size < candidate.minSize) continue;
       if (!best || size > best.size) best = { blob: icon.blob, size };
       if (size >= TARGET_SIZE) break;
     }
-    return best && best.size >= MIN_SIZE ? await tidy(best.blob) : null;
+    return best ? await tidy(best.blob, best.size) : null;
   } finally {
     clearTimeout(timer);
   }

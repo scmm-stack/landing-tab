@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { contentBox } from '../src/lib/trim';
+import { SMALL_ICON_SIZE, contentBox, needsBorder } from '../src/lib/trim';
 
 /** RGBA pixels, transparent except for a filled rectangle. */
 function image(width: number, height: number, fill: { x: number; y: number; width: number; height: number }, alpha = 255) {
@@ -31,5 +31,14 @@ describe('contentBox', () => {
 
   it('has nothing to crop in an empty image', () => {
     expect(contentBox(new Uint8ClampedArray(10 * 10 * 4), 10, 10)).toBeNull();
+  });
+});
+
+describe('needsBorder', () => {
+  it('borders icons too small to stretch across a tile', () => {
+    expect(needsBorder(32)).toBe(true);
+    expect(needsBorder(SMALL_ICON_SIZE - 1)).toBe(true);
+    expect(needsBorder(SMALL_ICON_SIZE)).toBe(false);
+    expect(needsBorder(Infinity)).toBe(false);
   });
 });

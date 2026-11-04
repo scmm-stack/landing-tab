@@ -1,9 +1,12 @@
 import { MAX_TILE_IMAGE_BYTES, decodeBlob } from './images';
 
 /**
- * Some sites' larger icons are app icons drawn with wide empty margins, because
- * phones crop them. On a tile those margins just make the logo small, so they're
- * cut down to a thin even border. Icons with ordinary margins are left alone.
+ * Two fixes for how an icon sits on a tile. Some sites' larger icons are app icons
+ * drawn with wide empty margins, because phones crop them. On a tile those margins
+ * just make the logo small, so they're cut down to a thin even border. A small
+ * icon, on the other hand, turns blurry when stretched across the whole tile, so
+ * it's given an empty border that keeps it at half the tile. Both can still be
+ * changed with the icon size slider.
  */
 
 export interface Box {
@@ -76,4 +79,41 @@ export async function trimMargins(blob: Blob): Promise<Blob> {
   } catch {
     return blob;
   }
+}
+
+/** Icons smaller than this are drawn at half the tile rather than stretched across it. */
+export const SMALL_ICON_SIZE = 64;
+
+export const needsBorder = (size: number): boolean => size < SMALL_ICON_SIZE;
+
+/** The icon on a transparent square twice its size, so a tile draws it at half. */
+async function addBorder(blob: Blob): Promise<Blob> {
+  // SVG is never small, and a GIF may be animated.
+  if (/^image\/(?:svg|gif)/i.test(blob.type)) return blob;
+  try {
+    const { image, release } = await decodeBlob(blob);
+    try {
+      const { naturalWidth: width, naturalHeight: height } = image;
+      if (!width || !height) return blob;
+      const side = Math.max(width, height) * 2;
+      const canvas = document.createElement('canvas');
+      canvas.width = side;
+      canvas.height = side;
+      const draw = canvas.getContext('2d');
+      if (!draw) return blob;
+      draw.imageSmoothingEnabled = false;
+      draw.drawImage(image, (side - width) / 2, (side - height) / 2, width, height);
+      const bordered = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
+      return bordered ?? blob;
+    } finally {
+      release();
+    }
+  } catch {
+    return blob;
+  }
+}
+
+/** Gets a found icon ready for a tile: a small one gets a border, a big one loses wide margins. */
+export function tidyIcon(blob: Blob, size: number): Promise<Blob> {
+  return needsBorder(size) ? addBorder(blob) : trimMargins(blob);
 }
