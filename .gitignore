@@ -7,3 +7,7 @@ web-ext-artifacts/
 test-results/
 .forbidden-terms
 CLAUDE.md
+
+# Full-size originals of the library images, and Windows download markers.
+backgrounds/
+*:Zone.Identifier
