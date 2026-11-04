@@ -90,7 +90,7 @@ The first Edge upload has to be done by hand in Partner Center, because the API 
 
 ### Rules
 
-- `src/lib/favicon.ts` is the only module allowed to use the network.
+- `src/lib/favicon.ts` and `src/lib/library.ts` are the only modules allowed to use the network.
 - New permissions, CSP changes, or unexpected addresses fail `npm run scan`.
 - Anything read from storage or a backup goes through `src/lib/normalize.ts`.
 - There is no background script.

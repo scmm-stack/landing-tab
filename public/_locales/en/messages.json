@@ -416,6 +416,18 @@
   "wallpaperColor": {
     "message": "Solid color"
   },
+  "wallpaperLibrary": {
+    "message": "Extension library"
+  },
+  "libraryUnavailable": {
+    "message": "The library can't be reached right now. It will try again later."
+  },
+  "nextImage": {
+    "message": "Next image"
+  },
+  "changeInterval": {
+    "message": "Change interval"
+  },
   "wallpaperSceneChoice": {
     "message": "Scene"
   },
@@ -453,6 +465,9 @@
     "message": "Every $1 minutes"
   },
   "rotateHours": {
+    "message": "Every $1 hours"
+  },
+  "rotateHoursFew": {
     "message": "Every $1 hours"
   },
   "rotateHour": {

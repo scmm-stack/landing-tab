@@ -1,9 +1,10 @@
 import { defineConfig } from 'wxt';
 
 /**
- * Connections are allowed only because favicon lookup needs them. Everything
- * else is closed. src/lib/favicon.ts is the single module allowed to use the
- * network, enforced by eslint.config.mjs and scripts/scan-build.mjs.
+ * Connections are allowed only because favicon lookup and the wallpaper library
+ * need them. Everything else is closed. src/lib/favicon.ts and src/lib/library.ts
+ * are the only modules allowed to use the network, enforced by eslint.config.mjs
+ * and scripts/scan-build.mjs.
  */
 export const CONTENT_SECURITY_POLICY = [
   "default-src 'none'",
@@ -26,7 +27,9 @@ export default defineConfig({
   manifestVersion: 3,
   // This list replaces the default of everything. Mozilla's reviewers rebuild from the
   // source archive, and need .npmrc to do it the same way.
-  zip: { includeSources: ['**/*', '.npmrc'] },
+  // The library's images are fetched from the repository, so the build doesn't need them,
+  // and backgrounds/ holds their untracked full-size originals.
+  zip: { includeSources: ['**/*', '.npmrc'], excludeSources: ['library/**', 'backgrounds/**'] },
   // The default preload polyfill contains a fetch call, which nothing here needs.
   vite: () => ({ build: { modulePreload: { polyfill: false } } }),
   manifest: ({ browser }) => ({

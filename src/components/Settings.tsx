@@ -1,10 +1,10 @@
 import { type ChangeEvent, type FormEvent, type ReactNode, useState } from 'react';
-import { nextWallpaper, reloadAfterRestore, storingImages } from '../lib/actions';
+import { nextLibraryImage, nextWallpaper, reloadAfterRestore, storingImages } from '../lib/actions';
 import { BackupError, backupFileName, createBackup, parseBackup } from '../lib/backup';
 import { type BookmarkFolder, exportToBookmarks, foldersFromTree, readBookmarks, requestBookmarkAccess } from '../lib/bookmarks';
 import { t } from '../lib/i18n';
 import { MAX_WALLPAPER_BYTES, isAllowedImage, listImageIds, loadImage, removeImage, saveImage } from '../lib/images';
-import { LAYOUT_PRESETS, type OpenTarget, type SceneId, type Settings as SettingsData, type ThemeMode } from '../lib/model';
+import { LAYOUT_PRESETS, LIBRARY_INTERVALS, type OpenTarget, type SceneId, type Settings as SettingsData, type ThemeMode } from '../lib/model';
 import { removeSiteAccess, requestSiteAccess } from '../lib/favicon';
 import { engineUrlIsValid } from '../lib/normalize';
 import { downloadBlob } from '../lib/open';
@@ -13,6 +13,7 @@ import { remLabel } from '../lib/units';
 import { tileFaceSize } from './Grid';
 import { useSiteAccess } from './ShortcutEditor';
 import { useImageUrl } from './Tile';
+import { useLibrary } from './Wallpaper';
 import { Choice, Field, Modal, Slider, Toggle, useFeedback } from './ui';
 
 type Tab = 'appearance' | 'shortcuts' | 'sidebar' | 'search' | 'clock' | 'data';
@@ -321,10 +322,20 @@ function WallpaperThumb({ id, active, onSelect, onRemove }: { id: string; active
   );
 }
 
+function intervalLabel(minutes: number): string {
+  const hours = minutes / 60;
+  if (hours === 0) return t('rotateNever');
+  if (hours === 1) return t('rotateHour');
+  // Polish counts 2, 3, 4, 22, 23 and 24 differently from 5 to 21.
+  const few = hours % 10 >= 2 && hours % 10 <= 4 && (hours % 100 < 12 || hours % 100 > 14);
+  return t(few ? 'rotateHoursFew' : 'rotateHours', String(hours));
+}
+
 function WallpaperSection({ s }: { s: SettingsData }) {
   const { toast, confirm } = useFeedback();
   const [busy, setBusy] = useState(false);
   const w = s.wallpaper;
+  const library = useLibrary(w.source === 'library');
 
   const addImages = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
@@ -384,9 +395,39 @@ function WallpaperSection({ s }: { s: SettingsData }) {
           { value: 'scene', label: t('wallpaperScene') },
           { value: 'image', label: t('wallpaperImage') },
           { value: 'color', label: t('wallpaperColor') },
+          { value: 'library', label: t('wallpaperLibrary') },
         ]}
-        onChange={(v) => change((d) => void (d.wallpaper.source = v))}
+        onChange={(v) =>
+          change((d) => {
+            d.wallpaper.source = v;
+            // Starts the interval now, rather than from whenever the library was last used.
+            if (v === 'library') d.wallpaper.libraryRotatedAt = Date.now();
+          })
+        }
       />
+
+      {w.source === 'library' && library?.length === 0 && <p className="hint">{t('libraryUnavailable')}</p>}
+
+      {w.source === 'library' && library && library.length > 1 && (
+        <>
+          <div className="actions start">
+            <button type="button" onClick={() => nextLibraryImage(library)}>
+              {t('nextImage')}
+            </button>
+          </div>
+          <Choice
+            label={t('changeInterval')}
+            value={String(w.libraryRotateMinutes)}
+            options={LIBRARY_INTERVALS.map((minutes) => ({ value: String(minutes), label: intervalLabel(minutes) }))}
+            onChange={(v) =>
+              change((d) => {
+                d.wallpaper.libraryRotateMinutes = Number(v);
+                d.wallpaper.libraryRotatedAt = Date.now();
+              })
+            }
+          />
+        </>
+      )}
 
       {w.source === 'scene' && (
         <Choice<SceneId>

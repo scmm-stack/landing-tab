@@ -416,6 +416,18 @@
   "wallpaperColor": {
     "message": "Jednolity kolor"
   },
+  "wallpaperLibrary": {
+    "message": "Biblioteka rozszerzenia"
+  },
+  "libraryUnavailable": {
+    "message": "Biblioteka jest teraz niedostępna. Kolejna próba nastąpi później."
+  },
+  "nextImage": {
+    "message": "Następny obraz"
+  },
+  "changeInterval": {
+    "message": "Częstotliwość zmiany"
+  },
   "wallpaperSceneChoice": {
     "message": "Scena"
   },
@@ -454,6 +466,9 @@
   },
   "rotateHours": {
     "message": "Co $1 godzin"
+  },
+  "rotateHoursFew": {
+    "message": "Co $1 godziny"
   },
   "rotateHour": {
     "message": "Co godzinę"

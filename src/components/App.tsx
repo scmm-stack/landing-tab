@@ -1,10 +1,11 @@
 import { type MouseEvent, type WheelEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { deleteGroup, deleteShortcuts, isRotationDue, nextWallpaper, takeRestoredFlag } from '../lib/actions';
+import { deleteGroup, deleteShortcuts, isRotationDue, nextLibraryImage, nextWallpaper, takeRestoredFlag } from '../lib/actions';
 import type { BookmarkFolder } from '../lib/bookmarks';
 import { averageColor } from '../lib/color';
 import { neighbourGroup } from '../lib/dashboard';
 import { t } from '../lib/i18n';
 import { loadImage } from '../lib/images';
+import { type LibraryEntry, currentEntry, getLibraryImage } from '../lib/library';
 import type { Group, Shortcut } from '../lib/model';
 import { SCENE_ACCENTS } from '../lib/scenes';
 import { update, useAppState } from '../lib/store';
@@ -17,7 +18,7 @@ import { SettingsPanel } from './Settings';
 import { ShortcutForm } from './ShortcutEditor';
 import { Sidebar } from './Sidebar';
 import { Standby, useStandby } from './Standby';
-import { Wallpaper } from './Wallpaper';
+import { Wallpaper, useLibrary } from './Wallpaper';
 import { ContextMenu, type MenuItem, Modal, useFeedback } from './ui';
 
 type Dialog =
@@ -50,8 +51,9 @@ function useTheme(mode: 'system' | 'light' | 'dark'): void {
   }, [mode]);
 }
 
-function useAccentColor(): void {
+function useAccentColor(library: LibraryEntry[] | null): void {
   const { wallpaper } = useAppState().settings;
+  const libraryEntry = wallpaper.source === 'library' && library ? currentEntry(library, wallpaper.libraryImage) : null;
   useEffect(() => {
     const root = document.documentElement.style;
     if (!wallpaper.pageColorsFollow) {
@@ -66,7 +68,14 @@ function useAccentColor(): void {
     };
     if (wallpaper.source === 'color') set(wallpaper.color);
     else if (wallpaper.source === 'scene') set(SCENE_ACCENTS[wallpaper.scene]);
-    else if (wallpaper.activeImageId) {
+    else if (wallpaper.source === 'library') {
+      if (libraryEntry) {
+        void getLibraryImage(libraryEntry)
+          .then((blob) => (blob ? averageColor(blob) : null))
+          .catch(() => null)
+          .then(set);
+      }
+    } else if (wallpaper.activeImageId) {
       void loadImage(wallpaper.activeImageId)
         .then((blob) => (blob ? averageColor(blob) : null))
         .catch(() => null)
@@ -75,11 +84,11 @@ function useAccentColor(): void {
     return () => {
       live = false;
     };
-  }, [wallpaper.pageColorsFollow, wallpaper.source, wallpaper.color, wallpaper.scene, wallpaper.activeImageId]);
+  }, [wallpaper.pageColorsFollow, wallpaper.source, wallpaper.color, wallpaper.scene, wallpaper.activeImageId, libraryEntry]);
 }
 
-function useWallpaperRotation(): void {
-  const { rotateMinutes, lastRotatedAt, imageIds, source } = useAppState().settings.wallpaper;
+function useWallpaperRotation(library: LibraryEntry[] | null): void {
+  const { rotateMinutes, lastRotatedAt, imageIds, source, libraryRotateMinutes, libraryRotatedAt } = useAppState().settings.wallpaper;
   useEffect(() => {
     if (source !== 'image') return;
     const check = () => {
@@ -89,6 +98,18 @@ function useWallpaperRotation(): void {
     const timer = setInterval(check, 60_000);
     return () => clearInterval(timer);
   }, [rotateMinutes, lastRotatedAt, imageIds.length, source]);
+
+  // The time of the last change is stored, so an interval carries on across restarts:
+  // a tab opened after the browser was closed long enough changes the image at once.
+  useEffect(() => {
+    if (source !== 'library' || !library) return;
+    const check = () => {
+      if (isRotationDue(libraryRotateMinutes, libraryRotatedAt, library.length, Date.now())) nextLibraryImage(library);
+    };
+    check();
+    const timer = setInterval(check, 60_000);
+    return () => clearInterval(timer);
+  }, [libraryRotateMinutes, libraryRotatedAt, library, source]);
 }
 
 export function App() {
@@ -114,8 +135,9 @@ export function App() {
   }, [toast]);
 
   useTheme(settings.theme);
-  useAccentColor();
-  useWallpaperRotation();
+  const library = useLibrary(settings.wallpaper.source === 'library');
+  useAccentColor(library);
+  useWallpaperRotation(library);
   const [standbyOpen, dismissStandby] = useStandby(settings.standby, dialog !== null);
 
   const activeGroup = dashboard.groups.find((g) => g.id === groupId) ?? dashboard.groups[0];
@@ -229,6 +251,9 @@ export function App() {
     if (settings.wallpaper.source === 'image' && settings.wallpaper.imageIds.length > 1) {
       items.splice(1, 0, { label: t('nextWallpaper'), onSelect: () => nextWallpaper() });
     }
+    if (settings.wallpaper.source === 'library' && library && library.length > 1) {
+      items.splice(1, 0, { label: t('nextImage'), onSelect: () => nextLibraryImage(library) });
+    }
     setMenu({ x: e.clientX, y: e.clientY, items });
   };
 
@@ -259,7 +284,7 @@ export function App() {
 
   return (
     <>
-      <Wallpaper settings={settings.wallpaper} />
+      <Wallpaper settings={settings.wallpaper} library={library} />
       <div className={`layout side-${settings.sidebar.side}`}>
         <Sidebar
           activeGroupId={activeGroup.id}

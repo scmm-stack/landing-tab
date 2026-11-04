@@ -45,6 +45,8 @@ const ALLOWED_URLS = [
   'https://search.brave.com/search',
   'https://www.startpage.com/do/search',
   'https://example.com/search',
+  'https://api.github.com/repos/scmm-stack/landing-tab/contents/library', // the wallpaper library's list
+  'https://raw.githubusercontent.com/scmm-stack/landing-tab/main/library/', // the wallpaper library's images
   'http://www.w3.org/', // XML namespaces used by React DOM, never requested
   'https://react.dev/', // React's production error messages, never requested
 ];
@@ -53,7 +55,8 @@ const ALLOWED_URLS = [
 const ALLOWED_PATTERNS = [/^https?:\/\/\*\/\*$/, /^https:\/\/\$\{[\w$]+\}$/];
 
 const ALLOWED_FETCH_FILES = /^chunks\/|^newtab|^popup/;
-const EXPECTED_FETCH_CALLS = 2;
+// Two in favicon.ts and one in library.ts.
+const EXPECTED_FETCH_CALLS = 3;
 
 const failures = [];
 const fail = (target, message) => failures.push(`[${target}] ${message}`);

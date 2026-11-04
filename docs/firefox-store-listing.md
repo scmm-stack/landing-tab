@@ -36,4 +36,4 @@ The code is bundled with WXT and Vite. To rebuild it from the source archive:
 
 `npm run setup` prints ".git can't be found" outside a git checkout. That's expected and harmless.
 
-To test: open a new tab to see the dashboard. The toolbar button adds the current page as a shortcut. No account is needed. Website images are off until the user allows site access, and `src/lib/favicon.ts` is the only module that uses the network.
+To test: open a new tab to see the dashboard. The toolbar button adds the current page as a shortcut. No account is needed. Website images are off until the user allows site access. `src/lib/favicon.ts` and `src/lib/library.ts` are the only modules that use the network. The second one downloads wallpapers from the extension's GitHub repository, and only when the user picks Extension library as the wallpaper.

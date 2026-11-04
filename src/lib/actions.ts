@@ -1,6 +1,7 @@
 import * as dash from './dashboard';
 import { type Shortcut } from './model';
 import { listImageIds, removeImage } from './images';
+import { type LibraryEntry, nextEntry } from './library';
 import { flush, readSavedState, update } from './store';
 
 const IMAGE_LOCK = 'landing-tab-images';
@@ -89,4 +90,14 @@ export function nextWallpaper(now = Date.now()): void {
 
 export function isRotationDue(rotateMinutes: number, lastRotatedAt: number, imageCount: number, now: number): boolean {
   return rotateMinutes > 0 && imageCount > 1 && now - lastRotatedAt >= rotateMinutes * 60_000;
+}
+
+/** Advances to the next image in the extension's library, the same in every open tab. */
+export function nextLibraryImage(entries: LibraryEntry[], now = Date.now()): void {
+  update('settings', (s) => {
+    const next = nextEntry(entries, s.wallpaper.libraryImage);
+    if (!next) return;
+    s.wallpaper.libraryImage = next.name;
+    s.wallpaper.libraryRotatedAt = now;
+  });
 }
