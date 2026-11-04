@@ -2,7 +2,7 @@ import { copyFileSync, cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync,
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { CHROME, extensionOrigin, firefoxSystem, launch, openExtensionPage } from './browsers.mjs';
-import { TEST_SITE, hostsIn, startProxy } from './proxy.mjs';
+import { ASSET_HOST, TEST_SITE, hostsIn, startProxy } from './proxy.mjs';
 
 /**
  * Proves the network claim in real browsers:
@@ -503,9 +503,9 @@ async function imageLookupFlow(kind, page, origin, proxy, baseline, dashboardPag
   await sleep(2500);
   const requests = sentSince(mark);
   check(kind, 'image found after allowing once', Boolean(await page.$('.tile-preview img')), requests.map((r) => r.path).join(' '));
-  check(kind, 'contacted only that site', hostsIn(requests).join() === TEST_SITE, hostsIn(requests).join());
-  check(kind, 'only the home page and icon requested, never the full address', requests.map((r) => r.path).join(' ') === '/ /site-icon.png', requests.map((r) => r.path).join(' '));
-  check(kind, 'tracker icon on another site skipped', !requests.some((r) => r.host.includes('other-site')));
+  const asked = requests.map((r) => `${r.host}${r.path}`).join(' ');
+  check(kind, 'contacted only that site and the icon host its page names', hostsIn(requests).join() === [ASSET_HOST, TEST_SITE].sort().join(), hostsIn(requests).join());
+  check(kind, 'home page, then the big icon on its other domain, never the full address', asked === `${TEST_SITE}/ ${ASSET_HOST}/site-icon.png`, asked);
   check(kind, 'no cookies or referrer sent', requests.length > 0 && requests.every((r) => !r.headers.cookie && !r.headers.referer));
   await saveDialog(page);
   await sleep(300);
@@ -603,7 +603,7 @@ async function imageLookupFlow(kind, page, origin, proxy, baseline, dashboardPag
 
 /** Leaving the form any way but Save contacts nobody, and stops a save still waiting for an image. */
 async function closingFlow(kind, page, proxy) {
-  const contacted = (mark) => proxy.log.slice(mark).filter((e) => e.host === TEST_SITE).length;
+  const contacted = (mark) => proxy.log.slice(mark).filter((e) => e.host === TEST_SITE || e.host === ASSET_HOST).length;
   const pressX = () => page.click('.modal-close');
   const ways = { 'the X': pressX, 'a click outside': () => page.mouse.click(4, 4), Escape: () => page.keyboard.press('Escape') };
   for (const [way, close] of Object.entries(ways)) {
@@ -1021,7 +1021,7 @@ async function grantedFlow(kind, dir) {
     await popup.goto(`${origin}/popup.html`);
     await popup.waitForSelector('.popup .tile-preview');
     await sleep(1500);
-    const requests = proxy.log.slice(mark).filter((e) => e.host === TEST_SITE);
+    const requests = proxy.log.slice(mark).filter((e) => e.host === TEST_SITE || e.host === ASSET_HOST);
     check(kind, 'popup fetches the image on its own', Boolean(await popup.$('.popup .tile-preview img')), requests.map((r) => r.path).join(' '));
     check(kind, 'popup never sends the page address', requests.length > 0 && requests.every((r) => !/private|token|secret/.test(r.path)));
     await checkPanelFits(kind, popup, 'an image');
@@ -1153,7 +1153,7 @@ for (const kind of targets) {
   await restoreReloadFlow(kind, dir);
   await privateSearchFlow(kind, dir);
 
-  const allowed = new Set([...baseline, TEST_SITE, 'duckduckgo.com']);
+  const allowed = new Set([...baseline, TEST_SITE, ASSET_HOST, 'duckduckgo.com']);
   const extra = run.hosts.filter((h) => !allowed.has(h));
   console.log(`  hosts beyond the browser's own: ${extra.join(', ') || '(none)'}`);
   check(kind, 'no traffic beyond the browser baseline', extra.length === 0, extra.join(', '));

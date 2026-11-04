@@ -13,7 +13,7 @@ Only these requests are made, and each one is started by you:
 | Action | What is contacted |
 | --- | --- |
 | Opening a shortcut or submitting a search | That website or search engine, as with any link |
-| Adding a shortcut, if website images are on | That website's home page and icon, with no cookies and no referrer |
+| Adding a shortcut, if website images are on | That website's home page, and the icon files it names, which may be on another domain the site uses, as on any visit. No cookies and no referrer. |
 | Choosing **Extension library** as the wallpaper | GitHub, which hosts the extension's code: the list of library images at most once a day, and each image once, with no cookies and no referrer. Images are then kept in your browser. |
 
 Website images need your permission once. **Settings > Shortcuts > Fetch website images automatically** turns them off and hands the permission back.

@@ -1,14 +1,18 @@
 import { browser } from 'wxt/browser';
+import { imageSize } from './image-size';
 import { MAX_TILE_IMAGE_BYTES, isAllowedImage } from './images';
 import { readCapped } from './stream';
+import { trimMargins } from './trim';
 
 /**
  * ONE OF TWO MODULES ALLOWED TO USE THE NETWORK. The other is library.ts.
  *
  * It runs only while someone is adding a shortcut, and only after they have given
- * site access. It contacts only that site, asking for its home page rather than
- * the full address, sends no cookies and no referrer, and hands back a Blob that
- * the caller stores locally, so a site is never asked twice.
+ * site access. It asks for the site's home page rather than the full address, then
+ * for icons: the ones that page or its manifest names, which may sit on another
+ * domain the site uses, as they do on any visit, and two usual addresses on the
+ * site itself. It sends no cookies and no referrer, and hands back a Blob that the
+ * caller stores locally, so a site is never asked twice.
  */
 
 const SITE_ORIGINS = ['http://*/*', 'https://*/*'];
@@ -16,10 +20,24 @@ const TIMEOUT_MS = 6000;
 const MAX_PAGE_BYTES = 2 * 1024 * 1024;
 const MAX_MANIFEST_BYTES = 256 * 1024;
 
+/**
+ * Where an icon came from, in order of preference. A site's own icons look like
+ * its tab icon. Manifest icons are app icons, often drawn on a background square.
+ * A guess is a usual address the page didn't name.
+ */
+export type IconSource = 'icon' | 'touch' | 'manifest' | 'guess';
+
 export interface IconCandidate {
   url: string;
+  /** The size the page claims, Infinity for SVG. Downloaded icons are measured instead. */
   size: number;
+  source: IconSource;
 }
+
+/** Sharp on a 64px tile on a high-resolution screen. */
+export const TARGET_SIZE = 128;
+const MAX_ICON_REQUESTS = 6;
+const SOURCE_ORDER: IconSource[] = ['icon', 'touch', 'manifest', 'guess'];
 
 const REQUEST: RequestInit = {
   credentials: 'omit',
@@ -28,24 +46,6 @@ const REQUEST: RequestInit = {
   redirect: 'follow',
   mode: 'cors',
 };
-
-const COMPOUND_SUFFIXES = new Set(['co.uk', 'org.uk', 'ac.uk', 'gov.uk', 'co.jp', 'com.au', 'net.au', 'co.nz', 'com.br', 'com.pl', 'net.pl', 'org.pl', 'co.in', 'co.kr', 'com.cn']);
-
-/** Approximates the registrable domain, so www.example.com and cdn.example.com match. */
-export function siteOf(hostname: string): string {
-  const labels = hostname.toLowerCase().split('.');
-  if (labels.length <= 2 || /^\d+$/.test(labels[labels.length - 1] ?? '')) return hostname.toLowerCase();
-  const lastTwo = labels.slice(-2).join('.');
-  return COMPOUND_SUFFIXES.has(lastTwo) ? labels.slice(-3).join('.') : lastTwo;
-}
-
-export function sameSite(a: string, b: string): boolean {
-  try {
-    return siteOf(new URL(a).hostname) === siteOf(new URL(b).hostname);
-  } catch {
-    return false;
-  }
-}
 
 function largestSize(sizes: string | null | undefined): number {
   if (!sizes) return 0;
@@ -64,16 +64,26 @@ function resolveWebUrl(href: string | null | undefined, base: string): string | 
   }
 }
 
-/** Biggest same-site icon first. Icons on other sites are skipped, not contacted. */
-function rank(candidates: IconCandidate[], pageUrl: string): IconCandidate[] {
+const isSvg = (url: string, type: string | null) => type?.toLowerCase() === 'image/svg+xml' || /\.svg(?:[?#]|$)/i.test(url);
+
+/**
+ * The order icons are tried in: those that claim to be big enough first, then the
+ * rest, each group by source and then by claimed size. Guesses always come last.
+ */
+export function order(candidates: IconCandidate[]): IconCandidate[] {
   const seen = new Set<string>();
-  return candidates
-    .filter((c) => {
-      if (seen.has(c.url) || !sameSite(c.url, pageUrl)) return false;
-      seen.add(c.url);
-      return true;
-    })
-    .sort((a, b) => b.size - a.size);
+  const unique = candidates.filter((c) => !seen.has(c.url) && seen.add(c.url));
+  const rank = (c: IconCandidate) => (c.source === 'guess' ? 2 : c.size >= TARGET_SIZE ? 0 : 1);
+  return unique
+    .map((c, index) => ({ c, index }))
+    .sort(
+      (a, b) =>
+        rank(a.c) - rank(b.c) ||
+        SOURCE_ORDER.indexOf(a.c.source) - SOURCE_ORDER.indexOf(b.c.source) ||
+        (a.c.source === 'guess' ? 0 : b.c.size - a.c.size) ||
+        a.index - b.index,
+    )
+    .map(({ c }) => c);
 }
 
 export function iconsFromHtml(html: string, pageUrl: string): { icons: IconCandidate[]; manifestUrl: string | null } {
@@ -93,7 +103,8 @@ export function iconsFromHtml(html: string, pageUrl: string): { icons: IconCandi
     if (rels.includes('manifest')) manifestUrl ??= url;
     else if (rels.includes('icon') || rels.includes('apple-touch-icon') || rels.includes('apple-touch-icon-precomposed')) {
       const touchIcon = rels.some((r) => r.startsWith('apple-touch-icon'));
-      icons.push({ url, size: largestSize(link.getAttribute('sizes')) || (touchIcon ? 180 : 32) });
+      const size = isSvg(url, link.getAttribute('type')) ? Infinity : largestSize(link.getAttribute('sizes')) || (touchIcon ? 180 : 32);
+      icons.push({ url, size, source: touchIcon ? 'touch' : 'icon' });
     }
   }
   return { icons, manifestUrl };
@@ -103,10 +114,15 @@ export function iconsFromManifest(manifest: unknown, manifestUrl: string): IconC
   const list = (manifest as { icons?: unknown } | null)?.icons;
   if (!Array.isArray(list)) return [];
   const icons: IconCandidate[] = [];
-  for (const entry of list as { src?: unknown; sizes?: unknown }[]) {
+  for (const entry of list as { src?: unknown; sizes?: unknown; purpose?: unknown; type?: unknown }[]) {
     if (typeof entry?.src !== 'string') continue;
+    // Maskable icons carry wide margins for phones to crop, and monochrome ones lose their colors.
+    const purposes = typeof entry.purpose === 'string' ? entry.purpose.toLowerCase().split(/\s+/) : ['any'];
+    if (!purposes.includes('any')) continue;
     const url = resolveWebUrl(entry.src, manifestUrl);
-    if (url) icons.push({ url, size: largestSize(typeof entry.sizes === 'string' ? entry.sizes : null) });
+    if (!url) continue;
+    const size = isSvg(url, typeof entry.type === 'string' ? entry.type : null) ? Infinity : largestSize(typeof entry.sizes === 'string' ? entry.sizes : null);
+    icons.push({ url, size, source: 'manifest' });
   }
   return icons;
 }
@@ -118,14 +134,15 @@ async function getText(url: string, limit: number, signal: AbortSignal): Promise
   return bytes ? { text: new TextDecoder().decode(bytes), finalUrl: response.url || url } : null;
 }
 
-async function getIcon(url: string, signal: AbortSignal): Promise<Blob | null> {
+/** The icon and its real size, read from the file. Null size means the format didn't say. */
+async function getIcon(url: string, signal: AbortSignal): Promise<{ blob: Blob; size: number | null } | null> {
   const response = await fetch(url, { ...REQUEST, signal });
   if (!response.ok) return null;
   const bytes = await readCapped(response, MAX_TILE_IMAGE_BYTES);
   if (!bytes || bytes.byteLength === 0) return null;
   const type = response.headers.get('content-type')?.split(';')[0]?.trim().toLowerCase() ?? '';
   const blob = new Blob([bytes.slice().buffer], { type: type === 'image/ico' ? 'image/x-icon' : type });
-  return isAllowedImage(blob) ? blob : null;
+  return isAllowedImage(blob) ? { blob, size: imageSize(bytes, blob.type) } : null;
 }
 
 /**
@@ -155,7 +172,7 @@ export function canLookUp(url: string): boolean {
  * Only the home page is requested. A page's full address can hold private details
  * or a one-time link, and neither should be sent just to find an icon.
  */
-export async function findSiteIcon(pageUrl: string): Promise<Blob | null> {
+export async function findSiteIcon(pageUrl: string, tidy: (icon: Blob) => Promise<Blob> = trimMargins): Promise<Blob | null> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   const { signal } = controller;
@@ -166,7 +183,7 @@ export async function findSiteIcon(pageUrl: string): Promise<Blob | null> {
     const found = page ? iconsFromHtml(page.text, finalUrl) : { icons: [], manifestUrl: null };
     const candidates = [...found.icons];
 
-    if (found.manifestUrl && sameSite(found.manifestUrl, finalUrl)) {
+    if (found.manifestUrl) {
       const manifest = await getText(found.manifestUrl, MAX_MANIFEST_BYTES, signal).catch(() => null);
       if (manifest) {
         try {
@@ -177,13 +194,21 @@ export async function findSiteIcon(pageUrl: string): Promise<Blob | null> {
       }
     }
 
-    candidates.push({ url: new URL('/favicon.ico', finalUrl).href, size: 1 });
+    // Usual addresses the page didn't name, asked only of the site the home page ended up on.
+    candidates.push({ url: new URL('/apple-touch-icon.png', finalUrl).href, size: 180, source: 'guess' });
+    candidates.push({ url: new URL('/favicon.ico', finalUrl).href, size: 1, source: 'guess' });
 
-    for (const candidate of rank(candidates, finalUrl).slice(0, 5)) {
-      const blob = await getIcon(candidate.url, signal).catch(() => null);
-      if (blob) return blob;
+    // The first big enough wins. Failing that, the biggest one found.
+    let best: { blob: Blob; size: number } | null = null;
+    for (const candidate of order(candidates).slice(0, MAX_ICON_REQUESTS)) {
+      const icon = await getIcon(candidate.url, signal).catch(() => null);
+      if (!icon) continue;
+      // A format that doesn't say its size is taken at its word, but never as big enough.
+      const size = icon.size ?? Math.min(candidate.size, TARGET_SIZE - 1);
+      if (!best || size > best.size) best = { blob: icon.blob, size };
+      if (size >= TARGET_SIZE) break;
     }
-    return null;
+    return best ? await tidy(best.blob) : null;
   } finally {
     clearTimeout(timer);
   }
