@@ -2,7 +2,7 @@
  * The version lives in the git tag. package.json is bumped only inside the
  * release run, so the build picks the version up and nothing is pushed back to
  * main. After a release, the version goes to the workflow's output, and
- * release.yml hands that tag to .github/workflows/publish-edge.yml.
+ * release.yml hands that tag to the publish-edge and publish-firefox workflows.
  */
 export default {
   branches: ['main'],

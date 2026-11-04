@@ -44,3 +44,13 @@ jobs:
     with:
       tag: v${{ needs.release.outputs.version }}
     secrets: inherit
+
+  publish-firefox:
+    needs: release
+    if: needs.release.outputs.version != ''
+    permissions:
+      contents: read
+    uses: ./.github/workflows/publish-firefox.yml
+    with:
+      tag: v${{ needs.release.outputs.version }}
+    secrets: inherit
